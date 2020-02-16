@@ -96,14 +96,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       RaisedButton(
                           onPressed: () {
-                            Navigator.of(context).pushNamed("/LoginScreen");
+                            Navigator.of(context).pushNamed("/DashboardScreen");
                           },
                           shape: RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(20.0)),
                           color: Color.fromARGB(255, 190, 147, 90),
                           textColor: Colors.white,
                           padding: const EdgeInsets.only(
-                              top: 5, bottom: 5, right: 50, left: 50),
+                              top: 5, bottom: 5, right: 30, left: 30),
                           child: Container(
                             padding: const EdgeInsets.all(6.0),
                             child: const Text("Login",
