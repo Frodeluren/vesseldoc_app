@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vesseldoc_app/form_creator.dart';
 import 'package:vesseldoc_app/login_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -96,8 +97,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       width: MediaQuery.of(context).size.width * 0.45,
                       child: Center(
                         child: GestureDetector(
-                          onTap: () => Navigator.push(context,
-                              MaterialPageRoute(builder: (_) => LoginScreen())),
+                          onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => FormCreatorScreen())),
                           child: Column(
                             children: <Widget>[
                               Text("Create new form",

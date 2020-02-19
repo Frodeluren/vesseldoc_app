@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'splash_screen.dart';
 import 'login_screen.dart';
 import 'dashboard.dart';
+import 'form_creator.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,13 +12,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: SplashScreen(),
-      routes: <String, WidgetBuilder> {
+      routes: <String, WidgetBuilder>{
         "/SplashScreen": (BuildContext context) => new SplashScreen(),
         "/LoginScreen": (BuildContext context) => new LoginScreen(),
         "/DashboardScreen": (BuildContext context) => new DashboardScreen(),
+        "FormCreatorScreen": (BuildContext context) => new FormCreatorScreen(),
       },
     );
   }
 }
-
-
