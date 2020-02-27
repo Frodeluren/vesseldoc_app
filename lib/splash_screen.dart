@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:multicast_dns/multicast_dns.dart';
+
+import './service_discovery.dart';
+
+bool hasServer = false;
 
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
+
+  _ServiceDiscovery sd = new _ServiceDiscovery();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
@@ -72,5 +79,38 @@ class _SplashScreenState extends State<SplashScreen> {
         ],
       ),
     );
+  }
+}
+
+class _ServiceDiscovery {
+  _ServiceDiscovery() {
+    discover();
+  }
+
+/**
+ * Based on this example: https://pub.dev/packages/multicast_dns#-example-tab-
+ */
+  Future<void> discover() async {
+
+    const String name = '_http._tcp.local';
+    final MDnsClient client = MDnsClient();
+
+    await client.start();
+
+    await for (PtrResourceRecord ptr in client
+        .lookup<PtrResourceRecord>(ResourceRecordQuery.serverPointer(name))) {
+      await for (SrvResourceRecord srv in client.lookup<SrvResourceRecord>(
+          ResourceRecordQuery.service(ptr.domainName))) {
+        final String bundleId = ptr.domainName;
+
+        if (bundleId == 'vesseldoc._http._tcp.local') {
+          print("Found: ${srv.target}:${srv.port}");
+          hasServer = true;
+        }
+      }
+    }
+    client.stop();
+
+    print('Done.');
   }
 }
