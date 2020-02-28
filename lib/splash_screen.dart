@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:multicast_dns/multicast_dns.dart';
+import './store_address_service.dart';
 
 bool hasServer = false;
+StoreAddressService sas = new StoreAddressService();
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -87,9 +89,7 @@ class _ServiceDiscovery {
     discover();
   }
 
-/**
- * Based on this example: https://pub.dev/packages/multicast_dns#-example-tab-
- */
+  ///Based on this example: https://pub.dev/packages/multicast_dns#-example-tab-
   Future<void> discover() async {
     while (!hasServer) {
       const String name = '_http._tcp.local';
@@ -105,6 +105,7 @@ class _ServiceDiscovery {
 
           if (bundleId == 'vesseldoc._http._tcp.local') {
             print("Found: ${srv.target}:${srv.port}");
+            sas.writeAddress("${srv.target}:${srv.port}");
             hasServer = true;
           }
         }
@@ -118,3 +119,4 @@ class _ServiceDiscovery {
     }
   }
 }
+
