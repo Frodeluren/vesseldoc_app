@@ -4,6 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:multicast_dns/multicast_dns.dart';
 import './store_address_service.dart';
 
+// Servermode for testing purposes
+// 0: No server
+// 1: Local server
+// 2: Remote server
+int serverMode = 0;
+
 bool hasServer = false;
 StoreAddressService sas = new StoreAddressService();
 
@@ -86,7 +92,16 @@ class _SplashScreenState extends State<SplashScreen> {
 
 class _ServiceDiscovery {
   _ServiceDiscovery() {
+    if (serverMode == 0) {
+    hasServer = true;
+  } else if (serverMode == 1) {
     discover();
+  } else if (serverMode == 2) {
+    sas.writeAddress("vesseldoc.net:8080");
+    hasServer = true;
+  } else {
+    print("Please set a serverMode in splash_screen.dart!\n 0: No server\n 1: Local server\n 2: Remote server");
+  }
   }
 
   ///Based on this example: https://pub.dev/packages/multicast_dns#-example-tab-
