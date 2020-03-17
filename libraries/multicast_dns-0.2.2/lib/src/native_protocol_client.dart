@@ -37,12 +37,9 @@ class ResourceRecordCache {
 
   /// Update the records in this cache.
   void updateRecords(List<ResourceRecord> records) {
-    // TODO(karlklose): include flush bit in the record and only flush if
-    // necessary.
     // Clear the cache for all name/type combinations to be updated.
     final Map<int, Set<String>> seenRecordTypes = <int, Set<String>>{};
     for (ResourceRecord record in records) {
-      // TODO(dnfield): Update this to use set literal syntax when we're able to bump the SDK constraint.
       seenRecordTypes[record.resourceRecordType] ??=
           Set<String>(); // ignore: prefer_collection_literals
       if (seenRecordTypes[record.resourceRecordType].add(record.name)) {

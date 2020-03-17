@@ -93,15 +93,16 @@ class _SplashScreenState extends State<SplashScreen> {
 class _ServiceDiscovery {
   _ServiceDiscovery() {
     if (serverMode == 0) {
-    hasServer = true;
-  } else if (serverMode == 1) {
-    discover();
-  } else if (serverMode == 2) {
-    sas.writeAddress("vesseldoc.net:8080");
-    hasServer = true;
-  } else {
-    print("Please set a serverMode in splash_screen.dart!\n 0: No server\n 1: Local server\n 2: Remote server");
-  }
+      hasServer = true;
+    } else if (serverMode == 1) {
+      discover();
+    } else if (serverMode == 2) {
+      sas.writeAddress("vesseldoc.net:8080");
+      hasServer = true;
+    } else {
+      print(
+          "Please set a serverMode in splash_screen.dart!\n 0: No server\n 1: Local server\n 2: Remote server");
+    }
   }
 
   ///Based on this example: https://pub.dev/packages/multicast_dns#-example-tab-
@@ -134,4 +135,3 @@ class _ServiceDiscovery {
     }
   }
 }
-

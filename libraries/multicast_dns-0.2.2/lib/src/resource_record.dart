@@ -10,7 +10,6 @@ import 'package:meta/meta.dart';
 import 'package:multicast_dns/src/constants.dart';
 import 'package:multicast_dns/src/packet.dart';
 
-// TODO(dnfield): Probably should go with a real hashing function here
 // when https://github.com/dart-lang/sdk/issues/11617 is figured out.
 const int _seedHashPrime = 2166136261;
 const int _multipleHashPrime = 16777619;
@@ -52,7 +51,6 @@ class ResourceRecordType {
   /// A text record, also known as a "TXT" record.  It has a value of 16.
   static const int text = 16;
 
-  // TODO(dnfield): Support ANY in some meaningful way.  Might be server only.
   // /// A query for all records of all types known to the name server.
   // static const int any = 255;
 

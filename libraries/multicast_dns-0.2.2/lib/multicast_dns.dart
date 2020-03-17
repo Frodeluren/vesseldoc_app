@@ -224,7 +224,6 @@ class MDnsClient {
         _resolver.handleResponse(response);
         return;
       }
-      // TODO(dnfield): Support queries coming in for published entries.
     }
   }
 }
