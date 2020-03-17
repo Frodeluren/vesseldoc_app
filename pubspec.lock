@@ -98,9 +98,9 @@ packages:
   multicast_dns:
     dependency: "direct main"
     description:
-      name: multicast_dns
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "libraries/multicast_dns-0.2.2"
+      relative: true
+    source: path
     version: "0.2.2"
   path:
     dependency: transitive
