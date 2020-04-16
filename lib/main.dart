@@ -3,6 +3,8 @@ import 'splash_screen.dart';
 import 'login_screen.dart';
 import 'dashboard.dart';
 import 'form_creator.dart';
+import 'form_fill.dart';
+import 'decortest.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,7 +18,9 @@ class MyApp extends StatelessWidget {
         "/SplashScreen": (BuildContext context) => new SplashScreen(),
         "/LoginScreen": (BuildContext context) => new LoginScreen(),
         "/DashboardScreen": (BuildContext context) => new DashboardScreen(),
-        "FormCreatorScreen": (BuildContext context) => new FormCreatorScreen(),
+        "/FormCreatorScreen": (BuildContext context) => new FormCreatorScreen(),
+        "/FormFillerScreen": (BuildContext context) => new FormFillerScreen(),
+        "/FormFill": (BuildContext context) => new RegisterMap(),
       },
     );
   }

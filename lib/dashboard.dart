@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:vesseldoc_app/decortest.dart';
 import 'package:vesseldoc_app/form_creator.dart';
+import 'package:vesseldoc_app/form_fill.dart';
 import 'package:vesseldoc_app/login_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -125,7 +127,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: Center(
                         child: GestureDetector(
                           onTap: () => Navigator.push(context,
-                              MaterialPageRoute(builder: (_) => LoginScreen())),
+                              MaterialPageRoute(builder: (_) => FormFillerScreen())),
                           child: Column(
                             children: <Widget>[
                               Text("Fill out form",
