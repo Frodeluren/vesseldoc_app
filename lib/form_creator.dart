@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sticky_headers/sticky_headers/widget.dart';
 
 class FormCreatorScreen extends StatefulWidget {
   @override
@@ -8,8 +11,104 @@ class FormCreatorScreen extends StatefulWidget {
 }
 
 class _FormCreatorScreenState extends State<FormCreatorScreen> {
-  String _value;
+  String accessValue;
+  String fieldType;
+  final fieldTextController = TextEditingController();
+  final titleTextController = TextEditingController();
+  int numberOfFields = 0;
+
   bool isPhotoAttached = false;
+
+  List<DataRow> datatableRows = new List<DataRow>();
+  List<Widget> itemsInDataTable = new List<Widget>();
+
+  void addRowToDatatable() {
+    setState(() {
+      if (fieldType != "" &&
+          fieldTextController.text != "" &&
+          fieldTextController.text.length < 120) {
+        String photoAttached;
+        if (isPhotoAttached == true) {
+          photoAttached = "Yes";
+        } else {
+          photoAttached = "No";
+        }
+        numberOfFields++;
+        datatableRows.add(DataRow(cells: [
+          DataCell(Text(
+              numberOfFields.toString() + ". " + fieldTextController.text)),
+          DataCell(Text(fieldType)),
+          DataCell(Text(photoAttached)),
+        ]));
+      }
+    });
+  }
+
+  void addItemToDatatable() {
+    setState(() {
+      if (fieldType != "" &&
+          fieldTextController.text != "" &&
+          fieldTextController.text.length < 120) {
+        String photoAttached;
+        if (isPhotoAttached == true) {
+          photoAttached = "Yes";
+        } else {
+          photoAttached = "No";
+        }
+        numberOfFields++;
+        var random = new Random();
+        Widget w = new Dismissible(
+          key: Key(random.nextInt(1000).toString()),
+          child: Card(
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    height: 40,
+                    child: Center(
+                      child: Text(
+                        fieldTextController.text,
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    height: 40,
+                    child: Center(
+                      child: Text(
+                        fieldType,
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    height: 40,
+                    child: Center(
+                      child: Text(
+                        photoAttached,
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+        itemsInDataTable.add(w);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,15 +136,6 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                           top: MediaQuery.of(context).size.height * 0.05),
                       child: Row(
                         children: <Widget>[
-                          // Text("FORM CREATOR",
-                          //     style: GoogleFonts.roboto(
-                          //       textStyle: TextStyle(
-                          //         color: Colors.white,
-                          //         fontSize: 48,
-                          //       ),
-                          //     )),
-                          // SizedBox(
-                          //     width: MediaQuery.of(context).size.width * 0.03),
                           Container(
                             decoration: new BoxDecoration(
                               boxShadow: [
@@ -76,6 +166,7 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                                     SizedBox(width: 35),
                                     Expanded(
                                       child: TextField(
+                                        controller: titleTextController,
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.all(8.0),
                                           hintText: "Title for this checklist",
@@ -124,25 +215,30 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                                           hint: Text("Select access lvl"),
                                           items: [
                                             DropdownMenuItem(
-                                                value: "1", child: Text("1")),
+                                                value: "1",
+                                                child: Text("Deckcrew")),
                                             DropdownMenuItem(
-                                                value: "2", child: Text("2")),
+                                                value: "2",
+                                                child: Text("Machinecrew")),
                                             DropdownMenuItem(
-                                                value: "3", child: Text("3"))
+                                                value: "3",
+                                                child: Text("Supervisors")),
+                                            DropdownMenuItem(
+                                                value: "4", child: Text("All"))
                                           ],
                                           onChanged: (value) {
                                             setState(() {
-                                              _value = value;
+                                              accessValue = value;
                                             });
                                           },
-                                          value: _value,
+                                          value: accessValue,
                                           style: TextStyle(
                                               color: Colors.black,
-                                              fontSize: 18),
+                                              fontSize: 16),
                                         ),
                                       ),
                                     ),
-                                    new Spacer(), 
+                                    new Spacer(),
                                     RaisedButton(
                                         onPressed: () {
                                           Navigator.of(context)
@@ -243,15 +339,17 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                           padding: EdgeInsets.all(10),
                           child: Column(
                             children: <Widget>[
-                              Text(
-                                  "Please select which type of checkpoint you want",
-                                  style: GoogleFonts.roboto(
-                                    textStyle: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-                              SizedBox(height: 15),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text("Fieldttype",
+                                    style: GoogleFonts.roboto(
+                                      textStyle: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                              ),
+                              SizedBox(height: 10),
                               Container(
                                 padding: EdgeInsets.only(left: 7, right: 7),
                                 decoration: BoxDecoration(
@@ -264,25 +362,31 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                                     icon: Icon(Icons.keyboard_arrow_down),
                                     isExpanded: true,
                                     hint: Text(
-                                      "Select",
+                                      "Select wanted fieldtype",
                                       style: GoogleFonts.roboto(
                                         textStyle: TextStyle(
                                           color: Colors.black54,
+                                          fontSize: 16,
                                         ),
                                       ),
                                     ),
                                     items: [
                                       DropdownMenuItem(
-                                          value: "1", child: Text("Text")),
+                                          value: "Header",
+                                          child: Text("Header")),
                                       DropdownMenuItem(
-                                          value: "2",
-                                          child: Text("Checkpoint")),
+                                          value: "Checkbox",
+                                          child: Text("Checkbox")),
                                       DropdownMenuItem(
-                                          value: "3", child: Text("Slider"))
+                                          value: "Slider",
+                                          child: Text("Slider")),
+                                      DropdownMenuItem(
+                                          value: "Textinput",
+                                          child: Text("Textinput"))
                                     ],
                                     onChanged: (value) {
                                       setState(() {
-                                        _value = value;
+                                        fieldType = value;
                                       });
                                     },
                                     style: GoogleFonts.roboto(
@@ -290,7 +394,7 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                                         color: Colors.black,
                                       ),
                                     ),
-                                    value: _value,
+                                    value: fieldType,
                                   ),
                                 ),
                               ),
@@ -305,11 +409,12 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                                           fontWeight: FontWeight.bold),
                                     )),
                               ),
-                              SizedBox(height: 5),
+                              SizedBox(height: 10),
                               TextField(
+                                controller: fieldTextController,
                                 decoration: InputDecoration(
                                   contentPadding: EdgeInsets.all(8.0),
-                                  hintText: "Text of this checkpoint",
+                                  hintText: "Give text to the field",
                                   hintStyle: TextStyle(),
                                   focusColor: Color.fromARGB(255, 190, 147, 90),
                                   border: OutlineInputBorder(),
@@ -356,8 +461,10 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                                 children: <Widget>[
                                   RaisedButton(
                                       onPressed: () {
-                                        Navigator.of(context)
-                                            .pushNamed("/DashboardScreen");
+                                        setState(() {
+                                          fieldTextController.text = "";
+                                          fieldType = null;
+                                        });
                                       },
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -382,8 +489,7 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                                   SizedBox(width: 10),
                                   RaisedButton(
                                       onPressed: () {
-                                        Navigator.of(context)
-                                            .pushNamed("/DashboardScreen");
+                                        addItemToDatatable();
                                       },
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -414,59 +520,139 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                     ),
                     SizedBox(width: MediaQuery.of(context).size.width * 0.01),
                     Container(
-                        padding: EdgeInsets.only(left: 10, top: 25),
-                        child: Container(
-                          decoration: new BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black,
-                                blurRadius: 10.0,
-                              ),
-                            ],
-                            borderRadius:
-                                new BorderRadius.all(new Radius.circular(10.0)),
-                            color: Color.fromARGB(255, 225, 225, 225),
-                          ),
-                          child: DataTable(
-                            columns: [
-                              DataColumn(
-                                  label: Text(
-                                "Checkpoints",
-                                style: GoogleFonts.roboto(
-                                  textStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              )),
-                              DataColumn(
-                                label: Text(
-                                  "Type",
-                                  style: GoogleFonts.roboto(
-                                    textStyle: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
+                      padding: EdgeInsets.only(left: 10, top: 25),
+                      child: Container(
+                        decoration: new BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black,
+                              blurRadius: 10.0,
+                            ),
+                          ],
+                          borderRadius:
+                              new BorderRadius.all(new Radius.circular(10.0)),
+                          color: Color.fromARGB(255, 225, 225, 225),
+                        ),
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 190, 147, 90),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black54,
+                                      blurRadius: 3.0,
+                                      spreadRadius: 1.5,
+                                    ),
+                                  ]),
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Container(
+                                        height: 40,
+                                        child: Center(
+                                          child: Text(
+                                            "Field",
+                                            style: GoogleFonts.roboto(
+                                              textStyle: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        )),
                                   ),
-                                ),
-                              )
-                            ],
-                            rows: [
-                              DataRow(cells: [
-                                DataCell(
-                                    Text("1. What are the danger categories?")),
-                                DataCell(Text("Text")),
-                              ]),
-                              DataRow(cells: [
-                                DataCell(Text("2. How is that?")),
-                                DataCell(Text("Switch")),
-                              ])
-                            ],
-                          ),
-                          height: MediaQuery.of(context).size.height * 0.63,
-                          width: MediaQuery.of(context).size.width * 0.58,
-                          //color: Color.fromARGB(255, 200, 200, 200),
-                        )),
+                                  Expanded(
+                                    child: Container(
+                                        height: 40,
+                                        child: Center(
+                                          child: Text(
+                                            "Type",
+                                            style: GoogleFonts.roboto(
+                                              textStyle: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        )),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                        height: 40,
+                                        child: Center(
+                                          child: Text(
+                                            "Photo attached",
+                                            style: GoogleFonts.roboto(
+                                              textStyle: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        )),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                child: ReorderableListView(
+                                    children: itemsInDataTable,
+                                    onReorder: (oldIndex, newIndex) {
+                                      setState(() {
+                                        if (newIndex > oldIndex) {
+                                          newIndex -= 1;
+                                        }
+                                        final item =
+                                            itemsInDataTable.removeAt(oldIndex);
+                                        itemsInDataTable.insert(newIndex, item);
+                                      });
+                                    }),
+                              ),
+                            )
+                          ],
+                        ),
+
+                        // child: DataTable(columns: [
+                        //   DataColumn(
+                        //       label: Text(
+                        //     "Field",
+                        //     style: GoogleFonts.roboto(
+                        //       textStyle: TextStyle(
+                        //           color: Colors.black,
+                        //           fontSize: 18,
+                        //           fontWeight: FontWeight.bold),
+                        //     ),
+                        //   )),
+                        //   DataColumn(
+                        //     label: Text(
+                        //       "Type",
+                        //       style: GoogleFonts.roboto(
+                        //         textStyle: TextStyle(
+                        //             color: Colors.black,
+                        //             fontSize: 18,
+                        //             fontWeight: FontWeight.bold),
+                        //       ),
+                        //     ),
+                        //   ),
+                        //   DataColumn(
+                        //     label: Text(
+                        //       "Photo",
+                        //       style: GoogleFonts.roboto(
+                        //         textStyle: TextStyle(
+                        //             color: Colors.black,
+                        //             fontSize: 18,
+                        //             fontWeight: FontWeight.bold),
+                        //       ),
+                        //     ),
+                        //   )
+                        // ], rows: datatableRows),
+                      ),
+                      height: MediaQuery.of(context).size.height * 0.63,
+                      width: MediaQuery.of(context).size.width * 0.58,
+                    ),
                   ],
                 ),
               ],

@@ -65,7 +65,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 Container(
                   child: RaisedButton(
                       onPressed: () {
-                        Navigator.of(context).pushNamed("/LoginScreen");
+                        Navigator.of(context).pushReplacementNamed("/LoginScreen");
                       },
                       shape: RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(20.0)),

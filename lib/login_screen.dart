@@ -96,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       RaisedButton(
                           onPressed: () {
-                            Navigator.of(context).pushNamed("/DashboardScreen");
+                            Navigator.of(context).pushReplacementNamed("/DashboardScreen");
                           },
                           shape: RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(20.0)),
