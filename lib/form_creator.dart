@@ -44,7 +44,10 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
     });
   }
 
+  var random = new Random();
+
   void addItemToDatatable() {
+    var currentWidget;
     setState(() {
       if (fieldType != "" &&
           fieldTextController.text != "" &&
@@ -56,9 +59,12 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
           photoAttached = "No";
         }
         numberOfFields++;
-        var random = new Random();
+        String key = random.nextInt(1000).toString();
         Widget w = new Dismissible(
-          key: Key(random.nextInt(1000).toString()),
+          onDismissed: (dir) {
+            deleteFromDatatable(currentWidget);
+          },
+          key: Key(key),
           child: Card(
             child: Row(
               children: <Widget>[
@@ -106,6 +112,7 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
           ),
         );
         itemsInDataTable.add(w);
+        currentWidget = w;
       }
     });
   }
@@ -601,13 +608,18 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                                 child: ReorderableListView(
                                     children: itemsInDataTable,
                                     onReorder: (oldIndex, newIndex) {
-                                      setState(() {
-                                        if (newIndex > oldIndex) {
-                                          newIndex -= 1;
-                                        }
-                                        final item =
-                                            itemsInDataTable.removeAt(oldIndex);
-                                        itemsInDataTable.insert(newIndex, item);
+                                      if (newIndex > oldIndex) {
+                                        newIndex -= 1;
+                                      }
+                                      Future.delayed(
+                                          Duration(milliseconds: 100), () {
+                                        setState(() {
+                                          final item = itemsInDataTable
+                                              .removeAt(oldIndex);
+
+                                          itemsInDataTable.insert(
+                                              newIndex, item);
+                                        });
                                       });
                                     }),
                               ),
@@ -661,5 +673,15 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
         ),
       ),
     );
+  }
+
+  void moveItemInList(int oldIndex, int newIndex) {
+    final item = itemsInDataTable.removeAt(oldIndex);
+
+    itemsInDataTable.insert(newIndex, item);
+  }
+
+  void deleteFromDatatable(Widget item) {
+    itemsInDataTable.remove(item);
   }
 }
