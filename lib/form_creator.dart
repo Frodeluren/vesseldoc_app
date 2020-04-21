@@ -140,7 +140,7 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                   children: <Widget>[
                     Container(
                       margin: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.05),
+                          top: MediaQuery.of(context).size.height * 0.02),
                       child: Row(
                         children: <Widget>[
                           Container(
@@ -327,7 +327,9 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.only(left: 10, top: 25),
+                      padding: EdgeInsets.only(
+                          left: 10,
+                          top: MediaQuery.of(context).size.width * 0.01),
                       child: Container(
                         decoration: new BoxDecoration(
                           boxShadow: [
@@ -524,9 +526,10 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.01),
                     Container(
-                      padding: EdgeInsets.only(left: 10, top: 25),
+                      padding: EdgeInsets.only(
+                          left: 10,
+                          top: MediaQuery.of(context).size.width * 0.01),
                       child: Container(
                         decoration: new BoxDecoration(
                           boxShadow: [
@@ -545,6 +548,9 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                               height: 40,
                               decoration: BoxDecoration(
                                   color: Color.fromARGB(255, 190, 147, 90),
+                                  borderRadius: new BorderRadius.only(
+                                      topLeft: new Radius.circular(10.0),
+                                      topRight: new Radius.circular(10.0)),
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.black54,
@@ -662,7 +668,7 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                         // ], rows: datatableRows),
                       ),
                       height: MediaQuery.of(context).size.height * 0.63,
-                      width: MediaQuery.of(context).size.width * 0.58,
+                      width: MediaQuery.of(context).size.width * 0.598,
                     ),
                   ],
                 ),
@@ -684,11 +690,9 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
     itemsInDataTable.remove(item);
   }
 
-  void generateJsonForSending(){
-    for(var item in itemsInDataTable){
-      if(item is Checkbox){
-        
-      }
+  void generateJsonForSending() {
+    for (var item in itemsInDataTable) {
+      if (item is Checkbox) {}
     }
   }
 }

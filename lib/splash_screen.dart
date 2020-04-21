@@ -8,7 +8,7 @@ import './store_address_service.dart';
 // 0: No server
 // 1: Local server
 // 2: Remote server
-int serverMode = 2;
+int serverMode = 0;
 
 bool hasServer = false;
 StoreAddressService sas = new StoreAddressService();
