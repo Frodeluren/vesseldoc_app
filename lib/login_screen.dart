@@ -120,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 if (isAuthed)
                                                   {
                                                     Navigator.of(context)
-                                                        .pushNamed(
+                                                        .pushReplacementNamed(
                                                             "/DashboardScreen"),
                                                   }
                                               })
@@ -130,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       print(
                                           "WARNING: No address detected! Continues to dashboard and assumes this is a test."),
                                       Navigator.of(context)
-                                          .pushNamed("/DashboardScreen"),
+                                          .pushReplacementNamed("/DashboardScreen"),
                                     }
                                 });
                           },
