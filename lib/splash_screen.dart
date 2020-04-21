@@ -117,12 +117,17 @@ class _ServiceDiscovery {
           .lookup<PtrResourceRecord>(ResourceRecordQuery.serverPointer(name))) {
         await for (SrvResourceRecord srv in client.lookup<SrvResourceRecord>(
             ResourceRecordQuery.service(ptr.domainName))) {
-          final String bundleId = ptr.domainName;
+          await for (IPAddressResourceRecord ip
+              in client.lookup<IPAddressResourceRecord>(
+                  ResourceRecordQuery.addressIPv4(srv.target))) {
+            final String bundleId = ptr.domainName;
 
-          if (bundleId == 'vesseldoc._http._tcp.local') {
-            print("Found: ${srv.target}:${srv.port}");
-            sas.writeAddress("${srv.target}:${srv.port}");
-            hasServer = true;
+            if (bundleId == 'vesseldoc._http._tcp.local') {
+              print(
+                  "Found: ${ip.address.address}:${srv.port} with hostname ${srv.target}");
+              sas.writeAddress("${ip.address.address}:${srv.port}");
+              hasServer = true;
+            }
           }
         }
       }

@@ -1,4 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import './store_address_service.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import './token_service.dart';
+
+StoreAddressService sas = new StoreAddressService();
+String address;
+bool authed = false;
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -11,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _LoginService ls = new _LoginService();
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 30, 63, 90),
       body: SingleChildScrollView(
@@ -96,7 +107,32 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       RaisedButton(
                           onPressed: () {
-                            Navigator.of(context).pushReplacementNamed("/DashboardScreen");
+                            sas.readAddress().then((addressRead) => {
+                                  print("Address: '$addressRead'"),
+                                  address = addressRead,
+                                  if (address.isNotEmpty)
+                                    {
+                                      print("Detected address: $address"),
+                                      ls
+                                          .login(uidController.value.text,
+                                              pwdController.value.text)
+                                          .then((isAuthed) => {
+                                                if (isAuthed)
+                                                  {
+                                                    Navigator.of(context)
+                                                        .pushNamed(
+                                                            "/DashboardScreen"),
+                                                  }
+                                              })
+                                    }
+                                  else
+                                    {
+                                      print(
+                                          "WARNING: No address detected! Continues to dashboard and assumes this is a test."),
+                                      Navigator.of(context)
+                                          .pushNamed("/DashboardScreen"),
+                                    }
+                                });
                           },
                           shape: RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(20.0)),
@@ -118,5 +154,29 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+}
+
+class _LoginService {
+  Future<bool> login(String username, String password) async {
+    String url = "http://$address/authenticate";
+    Map<String, String> headers = {"Content-type": "application/json"};
+    print(url);
+
+    print('username: "$username" \npassword: "$password"');
+
+    var response = await http.post(url,
+        headers: headers,
+        body: '{"username": "$username", "password": "$password"}');
+    print("Response code: ${response.statusCode}");
+    print("Response body: ${response.body}");
+
+    if (response.statusCode == 200) {
+      TokenService ts = new TokenService();
+      ts.writeToken(response.body);
+      return true;
+    } else {
+      return false;
+    }
   }
 }
