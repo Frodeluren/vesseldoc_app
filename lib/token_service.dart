@@ -1,24 +1,23 @@
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
-///Based on: https://flutter.dev/docs/cookbook/persistence/reading-writing-files
-class StoreAddressService {
+class TokenService {
   Future<String> get _localPath async {
-    Directory directory = await getTemporaryDirectory(); //Directory.systemTemp.createTemp();
+    Directory directory = await getApplicationDocumentsDirectory(); //Directory.systemTemp.createTemp();
         return directory.path;
       }
     
       Future<File> get _localFile async {
         final path = await _localPath;
-        return File('$path/address.txt');
+        return File('$path/token.json');
       }
     
-      writeAddress(String address) async {
+      writeToken(String token) async {
         final file = await _localFile;
-        return file.writeAsStringSync(address);
+        return file.writeAsStringSync(token);
       }
     
-      Future<String> readAddress() async {
+      Future<String> readToken() async {
         try {
           final file = await _localFile;
           return await file.readAsString();
