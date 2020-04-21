@@ -5,9 +5,17 @@ import 'package:flutter/material.dart';
 class FormFillerScreen extends StatefulWidget {
   @override
   _FormFillerScreenState createState() => _FormFillerScreenState();
+
+  String title;
+  FormFillerScreen({this.title});
 }
 
 class _FormFillerScreenState extends State<FormFillerScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Map form = {
     'autoValidated': false,
     'fields': [
@@ -42,9 +50,18 @@ class _FormFillerScreenState extends State<FormFillerScreen> {
         'type': 'Checkbox',
         'label': 'The Work Permit is valid for:',
         'items': [
+
+        ]
+      },
+      {
+        'key': 'checkbox1',
+        'type': 'Checkbox',
+        'hiddenLabel': 'true',
+        'label': 'The Work Permit is valid for:',
+        'items': [
           {
             'label': "Tanks/enclosed spaces",
-            'value': true,
+            'value': false,
           },
           {
             'label': "Hot work",
@@ -56,7 +73,7 @@ class _FormFillerScreenState extends State<FormFillerScreen> {
           },
           {
             'label': "Working overside/outboard",
-            'value': true,
+            'value': false,
           },
           {
             'label': "Electrical circuits",
@@ -76,7 +93,7 @@ class _FormFillerScreenState extends State<FormFillerScreen> {
           },
           {
             'label': "Other dangerous operations",
-            'value': true,
+            'value': false,
           },
         ]
       },
@@ -87,7 +104,7 @@ class _FormFillerScreenState extends State<FormFillerScreen> {
         'items': [
           {
             'label': "Deck",
-            'value': true,
+            'value': false,
           },
           {
             'label': "Hot work",
@@ -99,7 +116,7 @@ class _FormFillerScreenState extends State<FormFillerScreen> {
           },
           {
             'label': "Working overside/outboard",
-            'value': true,
+            'value': false,
           },
           {
             'label': "Electrical circuits",
@@ -119,14 +136,14 @@ class _FormFillerScreenState extends State<FormFillerScreen> {
           },
           {
             'label': "Other dangerous operations",
-            'value': true,
+            'value': false,
           },
         ]
       },
     ]
   };
   dynamic response;
-
+  dynamic data;
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -139,46 +156,63 @@ class _FormFillerScreenState extends State<FormFillerScreen> {
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 190, 147, 90),
         title: Text(
-          "",
+          widget.title ?? "",
         ),
         centerTitle: true,
         actions: <Widget>[],
       ),
       body: new SingleChildScrollView(
-        child: new Center(
-          child: Container(
-            color: Colors.white,
-            child: new Column(children: <Widget>[
-              new Container(
-                child: new Text(
-                  "S2: Work Permit",
-                  style: TextStyle(
-                      fontSize: 30.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
-                ),
-                margin: EdgeInsets.only(top: 10.0),
+        child: Container(
+          color: Color.fromARGB(255, 30, 63, 90),
+          child: new Center(
+            child: Container(
+              padding: EdgeInsets.all(10),
+              width: MediaQuery.of(context).size.width * 0.90,
+              margin: EdgeInsets.only(top: 10, bottom: 10),
+              decoration: new BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black,
+                    blurRadius: 10.0,
+                  ),
+                ],
+                borderRadius: new BorderRadius.all(new Radius.circular(10.0)),
+                color: Color.fromARGB(255, 245, 245, 245),
               ),
-              new JsonSchema(
-                formMap: form,
-                onChanged: (dynamic response) {
-                  this.response = response;
-                  print(response);
-                },
-                actionSave: (data) {
-                  print(data);
-                },
-                buttonSave: new Container(
-                  height: 40.0,
-                  color: Color.fromARGB(255, 190, 147, 90),
-                  child: Center(
-                    child: Text("Send",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold)),
+              child: new Column(children: <Widget>[
+                // new Container(
+                //   child: new Text(
+                //     "S2: Work Permit",
+                //     style: TextStyle(
+                //         fontSize: 30.0,
+                //         fontWeight: FontWeight.bold,
+                //         color: Colors.black),
+                //   ),
+                //   margin: EdgeInsets.only(top: 10.0),
+                // ),
+                new JsonSchema(
+                  formMap: form,
+                  onChanged: (dynamic response) {
+                    this.response = response;
+                    print(response);
+                  },
+                  actionSave: (dynamic data) {
+                    this.data = data;
+                    print(data);
+                  },
+                  buttonSave: new Container(
+                    height: 40.0,
+                    color: Color.fromARGB(255, 190, 147, 90),
+                    child: Center(
+                      child: Text("Send",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold)),
+                    ),
                   ),
                 ),
-              ),
-            ]),
+              ]),
+            ),
           ),
         ),
       ),

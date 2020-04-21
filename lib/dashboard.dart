@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vesseldoc_app/decortest.dart';
 import 'package:vesseldoc_app/form_creator.dart';
 import 'package:vesseldoc_app/form_fill.dart';
+import 'package:vesseldoc_app/form_list_screen.dart';
 import 'package:vesseldoc_app/login_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -18,7 +19,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         backgroundColor: Color.fromARGB(255, 190, 147, 90),
         title: Text("Dashboard"),
         centerTitle: true,
-        actions: <Widget>[],
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.settings, color: Colors.white), onPressed: (){
+            
+          },),
+        ],
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -67,7 +72,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => FormFillerScreen())),
+                                builder: (_) => FormListScreen())),
                         child: Column(
                           children: <Widget>[
                             Text("Fill out form",

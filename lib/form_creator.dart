@@ -176,7 +176,7 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                                         controller: titleTextController,
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.all(8.0),
-                                          hintText: "Title for this checklist",
+                                          hintText: "Give the form a title",
                                           hintStyle: TextStyle(),
                                           focusColor:
                                               Color.fromARGB(255, 190, 147, 90),
@@ -214,7 +214,7 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                                       padding:
                                           EdgeInsets.only(right: 7, left: 7),
                                       width: MediaQuery.of(context).size.width *
-                                          0.2,
+                                          0.21,
                                       child: DropdownButtonHideUnderline(
                                         child: DropdownButton(
                                           icon: Icon(Icons.keyboard_arrow_down),
@@ -317,7 +317,6 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                             ),
                             height: MediaQuery.of(context).size.height * 0.15,
                             width: MediaQuery.of(context).size.width * 0.95,
-                            //color: Color.fromARGB(255, 200, 200, 200),
                           ),
                         ],
                       ),
@@ -385,8 +384,8 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                                           value: "Checkbox",
                                           child: Text("Checkbox")),
                                       DropdownMenuItem(
-                                          value: "Slider",
-                                          child: Text("Slider")),
+                                          value: "Switch",
+                                          child: Text("Switch")),
                                       DropdownMenuItem(
                                           value: "Textinput",
                                           child: Text("Textinput"))
@@ -683,5 +682,13 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
 
   void deleteFromDatatable(Widget item) {
     itemsInDataTable.remove(item);
+  }
+
+  void generateJsonForSending(){
+    for(var item in itemsInDataTable){
+      if(item is Checkbox){
+        
+      }
+    }
   }
 }
