@@ -30,7 +30,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               MaterialPageRoute(
                                   builder: (_) => FormCreatorScreen())),
                           child: menuItem("Create new form",
-                              "assets/createnewform.jpg", 0XFFBF935A, 2),
+                              "assets/workers3.png", 0XFFBF935A, 2),
                         ),
                       ),
                       SizedBox(
@@ -42,7 +42,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               MaterialPageRoute(
                                   builder: (_) => FormListScreen())),
                           child: menuItem("Fill out form",
-                              "assets/filloutform2.png", 0XFFBF935A, 2),
+                              "assets/filloutform3.png", 0XFFBF935A, 2),
                         ),
                       ),
                       SizedBox(
@@ -63,7 +63,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (_) => LoginScreen())),
-                            child: menuItem("Workers", "assets/workers2.png",
+                            child: menuItem("Manage workers", "assets/workers2.png",
                                 0XFFBF935A, 2)),
                       ),
                     ],
@@ -92,7 +92,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               MaterialPageRoute(
                                   builder: (_) => FormCreatorScreen())),
                           child: menuItem("Create new form",
-                              "assets/createnewform.jpg", 0XFFBF935A, 2),
+                              "assets/workers3.png", 0XFFBF935A, 2),
                         ),
                       ),
                       SizedBox(width: MediaQuery.of(context).size.width * 0.01),
@@ -103,7 +103,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               MaterialPageRoute(
                                   builder: (_) => FormListScreen())),
                           child: menuItem("Fill out form",
-                              "assets/filloutform2.png", 0XFFBF935A, 2),
+                              "assets/filloutform3.png", 0XFFBF935A, 2),
                         ),
                       ),
                     ],
@@ -128,7 +128,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (_) => LoginScreen())),
-                            child: menuItem("Workers", "assets/workers2.png",
+                            child: menuItem("Manage workers", "assets/workers2.png",
                                 0XFFBF935A, 2)),
                       ),
                     ],
