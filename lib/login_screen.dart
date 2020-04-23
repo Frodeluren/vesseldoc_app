@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:vesseldoc_app/tools.dart';
 import './store_address_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
@@ -18,11 +19,18 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final uidController = TextEditingController();
   final pwdController = TextEditingController();
+  var tools = Tools();
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  @override
   Widget build(BuildContext context) {
-    _LoginService ls = new _LoginService();
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Color.fromARGB(255, 30, 63, 90),
       body: SingleChildScrollView(
         child: Container(
@@ -107,21 +115,36 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       RaisedButton(
                           onPressed: () {
+                            _scaffoldKey.currentState.showSnackBar(new SnackBar(
+                              content: new Row(
+                                children: <Widget>[
+                                  new CircularProgressIndicator(),
+                                  new Text("   Signing-In..."),
+                                ],
+                              ),
+                            ));
                             sas.readAddress().then((addressRead) => {
                                   print("Address: '$addressRead'"),
                                   address = addressRead,
                                   if (address.isNotEmpty)
                                     {
                                       print("Detected address: $address"),
-                                      ls
+                                      tools
                                           .login(uidController.value.text,
                                               pwdController.value.text)
                                           .then((isAuthed) => {
                                                 if (isAuthed)
                                                   {
+                                                    _scaffoldKey.currentState
+                                                        .hideCurrentSnackBar(),
                                                     Navigator.of(context)
                                                         .pushReplacementNamed(
                                                             "/DashboardScreen"),
+                                                  }
+                                                else
+                                                  {
+                                                    _scaffoldKey.currentState
+                                                        .hideCurrentSnackBar(),
                                                   }
                                               })
                                     }
@@ -130,7 +153,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                       print(
                                           "WARNING: No address detected! Continues to dashboard and assumes this is a test."),
                                       Navigator.of(context)
-                                          .pushReplacementNamed("/DashboardScreen"),
+                                          .pushReplacementNamed(
+                                              "/DashboardScreen"),
                                     }
                                 });
                           },
@@ -154,29 +178,5 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-  }
-}
-
-class _LoginService {
-  Future<bool> login(String username, String password) async {
-    String url = "http://$address/authenticate";
-    Map<String, String> headers = {"Content-type": "application/json"};
-    print(url);
-
-    print('username: "$username" \npassword: "$password"');
-
-    var response = await http.post(url,
-        headers: headers,
-        body: '{"username": "$username", "password": "$password"}');
-    print("Response code: ${response.statusCode}");
-    print("Response body: ${response.body}");
-
-    if (response.statusCode == 200) {
-      TokenService ts = new TokenService();
-      ts.writeToken(response.body);
-      return true;
-    } else {
-      return false;
-    }
   }
 }

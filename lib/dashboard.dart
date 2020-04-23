@@ -8,9 +8,37 @@ import 'package:vesseldoc_app/login_screen.dart';
 class DashboardScreen extends StatefulWidget {
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
+
+  String message;
+  bool showSnackBar;
+
+  DashboardScreen({this.message, this.showSnackBar});
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 1), () {
+      if (widget.showSnackBar == true) {
+        _scaffoldKey.currentState.showSnackBar(new SnackBar(
+          content: new Row(
+            children: <Widget>[
+              new Icon(Icons.check),
+              new SizedBox(
+                width: 15,
+                height: 40,
+              ),
+              new Text(widget.message),
+            ],
+          ),
+        ));
+      }
+    });
+  }
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   Widget dashBoard() {
     if (MediaQuery.of(context).orientation == Orientation.portrait) {
       return SafeArea(
@@ -63,8 +91,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (_) => LoginScreen())),
-                            child: menuItem("Manage workers", "assets/workers2.png",
-                                0XFFBF935A, 2)),
+                            child: menuItem("Manage workers",
+                                "assets/workers2.png", 0XFFBF935A, 2)),
                       ),
                     ],
                   ),
@@ -98,10 +126,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       SizedBox(width: MediaQuery.of(context).size.width * 0.01),
                       Expanded(
                         child: GestureDetector(
-                          onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => FormListScreen())),
+                          onTap: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => FormListScreen())),
+                          },
                           child: menuItem("Fill out form",
                               "assets/filloutform3.png", 0XFFBF935A, 2),
                         ),
@@ -128,8 +158,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (_) => LoginScreen())),
-                            child: menuItem("Manage workers", "assets/workers2.png",
-                                0XFFBF935A, 2)),
+                            child: menuItem("Manage workers",
+                                "assets/workers2.png", 0XFFBF935A, 2)),
                       ),
                     ],
                   ),
@@ -170,10 +200,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               itemName,
               style: GoogleFonts.roboto(
                 textStyle: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.white
-                ),
+                    fontSize: 22,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.white),
               ),
             ),
           ),
@@ -185,6 +214,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Color.fromARGB(255, 30, 63, 90),
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 190, 147, 90),

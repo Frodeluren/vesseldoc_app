@@ -3,7 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sticky_headers/sticky_headers/widget.dart';
+import 'package:vesseldoc_app/datatableItem_widget.dart';
+import 'package:vesseldoc_app/tools.dart';
 
 class FormCreatorScreen extends StatefulWidget {
   @override
@@ -11,6 +12,12 @@ class FormCreatorScreen extends StatefulWidget {
 }
 
 class _FormCreatorScreenState extends State<FormCreatorScreen> {
+  @override
+  void initState() {
+    tools.itemsInDataTable = new List<Widget>();
+    super.initState();
+  }
+
   String accessValue;
   String fieldType;
   final fieldTextController = TextEditingController();
@@ -18,9 +25,54 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
   int numberOfFields = 0;
 
   bool isPhotoAttached = false;
+  var tools = Tools();
 
   List<DataRow> datatableRows = new List<DataRow>();
-  List<Widget> itemsInDataTable = new List<Widget>();
+
+  void buildJson() {
+    String jsonString;
+    jsonString = "{\"autoValidated\": false,";
+    jsonString += "\"fields\": [";
+    for (DatatableItemWidget item in tools.itemsInDataTable) {
+      String key = item.keyWidget;
+      String type = item.fieldType;
+      String label = item.fieldTextController.text;
+      String placeholder = item.fieldTextController.text;
+      bool isRequired = item.isRequired;
+      switch (item.fieldType) {
+        case "Header":
+          {
+            jsonString +=
+                "{\"key\": \"$key\", \"type\": \"Checkbox\", \"label\": \"$label\",  \"items\": [] },";
+            break;
+          }
+        case "Checkbox":
+          {
+            jsonString +=
+                "{\"key\": \"$key\", \"type\": \"$type\", \"label\": \"$label\", \"hiddenLabel\": \"true\",  \"items\": [{ \"label\": \"$label\", \"value\": false}] },";
+            break;
+          }
+        case "Switch":
+          {
+            jsonString +=
+                "{\"key\": \"$key\", \"type\": \"$type\", \"label\": \"$label\",  \"value\": false},";
+            break;
+          }
+        case "Input":
+          {
+            jsonString +=
+                "{\"key\": \"$key\", \"type\": \"$type\", \"label\": \"$label\", \"placeholder\": \"$placeholder\", \"required\": $isRequired },";
+            break;
+          }
+      }
+    }
+    int lastIndex = jsonString.lastIndexOf(",");
+    var jsonSub = jsonString.substring(0,lastIndex);
+    jsonSub += "]";
+    jsonSub += "}";
+    tools.uploadStructure(titleTextController.text, jsonSub);
+    tools.getListOfAvailableFormStructures();
+  }
 
   void addRowToDatatable() {
     setState(() {
@@ -44,10 +96,11 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
     });
   }
 
-  var random = new Random();
+  static final randomSeed = new Random();
+  var random = new Random(randomSeed.nextInt(10000));
 
   void addItemToDatatable() {
-    var currentWidget;
+    //var currentWidget;
     setState(() {
       if (fieldType != "" &&
           fieldTextController.text != "" &&
@@ -59,60 +112,18 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
           photoAttached = "No";
         }
         numberOfFields++;
-        String key = random.nextInt(1000).toString();
-        Widget w = new Dismissible(
-          onDismissed: (dir) {
-            deleteFromDatatable(currentWidget);
-          },
-          key: Key(key),
-          child: Card(
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    height: 40,
-                    child: Center(
-                      child: Text(
-                        fieldTextController.text,
-                        style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    height: 40,
-                    child: Center(
-                      child: Text(
-                        fieldType,
-                        style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    height: 40,
-                    child: Center(
-                      child: Text(
-                        photoAttached,
-                        style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-        itemsInDataTable.add(w);
-        currentWidget = w;
+        String key = random.nextInt(10000).toString();
+        String keySuper = random.nextInt(10000).toString();
+        Widget w = new DatatableItemWidget(
+            //currentWidget: currentWidget,
+            fieldType: fieldType,
+            keyWidget: key,
+            fieldTextController: fieldTextController,
+            photoAttached: photoAttached,
+            isRequired: false,
+            keySuper: keySuper);
+        tools.itemsInDataTable.add(w);
+        //currentWidget = w;
       }
     });
   }
@@ -281,8 +292,9 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                                     SizedBox(width: 20),
                                     RaisedButton(
                                         onPressed: () {
+                                          buildJson();
                                           Navigator.of(context)
-                                              .pushNamed("/DashboardScreen");
+                                              .pushReplacementNamed("/DashboardScreen");
                                         },
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
@@ -389,7 +401,7 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                                           value: "Switch",
                                           child: Text("Switch")),
                                       DropdownMenuItem(
-                                          value: "Textinput",
+                                          value: "Input",
                                           child: Text("Textinput"))
                                     ],
                                     onChanged: (value) {
@@ -611,19 +623,21 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                             Expanded(
                               child: Container(
                                 child: ReorderableListView(
-                                    children: itemsInDataTable,
+                                    children: tools.itemsInDataTable,
                                     onReorder: (oldIndex, newIndex) {
-                                      if (newIndex > oldIndex) {
-                                        newIndex -= 1;
-                                      }
+                                      if (newIndex >
+                                          tools.itemsInDataTable.length)
+                                        newIndex =
+                                            tools.itemsInDataTable.length;
+                                      if (oldIndex < newIndex) newIndex--;
                                       Future.delayed(
                                           Duration(milliseconds: 100), () {
                                         setState(() {
-                                          final item = itemsInDataTable
+                                          final item = tools.itemsInDataTable
                                               .removeAt(oldIndex);
 
-                                          itemsInDataTable.insert(
-                                              newIndex, item);
+                                          tools.itemsInDataTable
+                                              .insert(newIndex, item);
                                         });
                                       });
                                     }),
@@ -678,21 +692,5 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
         ),
       ),
     );
-  }
-
-  void moveItemInList(int oldIndex, int newIndex) {
-    final item = itemsInDataTable.removeAt(oldIndex);
-
-    itemsInDataTable.insert(newIndex, item);
-  }
-
-  void deleteFromDatatable(Widget item) {
-    itemsInDataTable.remove(item);
-  }
-
-  void generateJsonForSending() {
-    for (var item in itemsInDataTable) {
-      if (item is Checkbox) {}
-    }
   }
 }

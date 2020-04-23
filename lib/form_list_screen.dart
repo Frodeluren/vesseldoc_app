@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:vesseldoc_app/form_fill.dart';
 import 'package:vesseldoc_app/form_fill_2.dart';
+import 'package:vesseldoc_app/form_structure.dart';
+import 'package:vesseldoc_app/tools.dart';
 
 class FormListScreen extends StatefulWidget {
   @override
@@ -12,6 +14,7 @@ class _FormListScreenState extends State<FormListScreen> {
   void initState() {
     super.initState();
   }
+  var tools = Tools();
 
   @override
   Widget build(BuildContext context) {
@@ -47,16 +50,17 @@ class _FormListScreenState extends State<FormListScreen> {
 
   Widget buildList() {
     return Container(
-      child: ListView.builder(itemBuilder: (BuildContext context, int index) {
+      child: ListView.builder(itemCount: tools.listOfAvailStructures.length, itemBuilder: (BuildContext context, int index) {
+        FormStructure formStruct = tools.listOfAvailStructures[index];
         return GestureDetector(
             onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (_) => FormFillerScreen(title: "test"))),
+                    builder: (_) => FormFillerScreen(formStructure: formStruct))),
             child: Card(
               child: ListTile(
                 title: Center(
-                  child: Text("test"),
+                  child: Text(formStruct.name),
                 ),
               ),
             ));

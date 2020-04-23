@@ -1,20 +1,29 @@
 import 'dart:convert';
 import 'package:json_to_form/json_schema.dart';
 import 'package:flutter/material.dart';
+import 'package:vesseldoc_app/dashboard.dart';
+import 'package:vesseldoc_app/form_structure.dart';
+import 'package:vesseldoc_app/tools.dart';
 
 class FormFillerScreen extends StatefulWidget {
   @override
   _FormFillerScreenState createState() => _FormFillerScreenState();
 
-  String title;
-  FormFillerScreen({this.title});
+  FormStructure formStructure;
+  FormFillerScreen({this.formStructure});
 }
 
 class _FormFillerScreenState extends State<FormFillerScreen> {
   @override
   void initState() {
     super.initState();
+    _future = tools.getWantedFormStructure(widget.formStructure);
   }
+
+  final GlobalKey<ScaffoldState> _scaffoldKeySendList =
+      new GlobalKey<ScaffoldState>();
+  var tools = Tools();
+  Future<Map> _future;
 
   Map form = {
     'autoValidated': false,
@@ -49,9 +58,7 @@ class _FormFillerScreenState extends State<FormFillerScreen> {
         'key': 'checkbox1',
         'type': 'Checkbox',
         'label': 'The Work Permit is valid for:',
-        'items': [
-
-        ]
+        'items': []
       },
       {
         'key': 'checkbox1',
@@ -142,6 +149,7 @@ class _FormFillerScreenState extends State<FormFillerScreen> {
       },
     ]
   };
+
   dynamic response;
   dynamic data;
   @override
@@ -153,17 +161,18 @@ class _FormFillerScreenState extends State<FormFillerScreen> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return new Scaffold(
+      key: _scaffoldKeySendList,
+      backgroundColor: Color.fromARGB(255, 30, 63, 90),
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 190, 147, 90),
         title: Text(
-          widget.title ?? "",
+          widget.formStructure.name ?? "",
         ),
         centerTitle: true,
         actions: <Widget>[],
       ),
       body: new SingleChildScrollView(
         child: Container(
-          color: Color.fromARGB(255, 30, 63, 90),
           child: new Center(
             child: Container(
               padding: EdgeInsets.all(10),
@@ -180,36 +189,59 @@ class _FormFillerScreenState extends State<FormFillerScreen> {
                 color: Color.fromARGB(255, 245, 245, 245),
               ),
               child: new Column(children: <Widget>[
-                // new Container(
-                //   child: new Text(
-                //     "S2: Work Permit",
-                //     style: TextStyle(
-                //         fontSize: 30.0,
-                //         fontWeight: FontWeight.bold,
-                //         color: Colors.black),
-                //   ),
-                //   margin: EdgeInsets.only(top: 10.0),
-                // ),
-                new JsonSchema(
-                  formMap: form,
-                  onChanged: (dynamic response) {
-                    this.response = response;
-                    print(response);
+                FutureBuilder<Map<dynamic, dynamic>>(
+                  future: _future,
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return new JsonSchema(
+                        formMap: snapshot.data,
+                        onChanged: (dynamic response) {
+                          this.response = response;
+                          print(response);
+                        },
+                        actionSave: (dynamic data) async {
+                          this.data = data;
+                          var text = "   Sending form...";
+                          var snack = new SnackBar(
+                            content: new Row(
+                              children: <Widget>[
+                                new CircularProgressIndicator(),
+                                new Text(text),
+                              ],
+                            ),
+                            //duration: Duration(seconds: 2),
+                          );
+                          _scaffoldKeySendList.currentState.showSnackBar(snack);
+                          tools
+                              .sendFilledOutForm(data, widget.formStructure)
+                              .then((val) {
+                            if (val == true) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => DashboardScreen(
+                                            showSnackBar: true,
+                                            message:
+                                                "Your form was successfully sent.",
+                                          )));
+                            }
+                          });
+                        },
+                        buttonSave: new Container(
+                          height: 40.0,
+                          color: Color.fromARGB(255, 190, 147, 90),
+                          child: Center(
+                            child: Text("Send",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+                      );
+                    } else {
+                      return new CircularProgressIndicator();
+                    }
                   },
-                  actionSave: (dynamic data) {
-                    this.data = data;
-                    print(data);
-                  },
-                  buttonSave: new Container(
-                    height: 40.0,
-                    color: Color.fromARGB(255, 190, 147, 90),
-                    child: Center(
-                      child: Text("Send",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold)),
-                    ),
-                  ),
                 ),
               ]),
             ),
