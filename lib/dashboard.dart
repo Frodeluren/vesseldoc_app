@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:vesseldoc_app/form_creator.dart';
 import 'package:vesseldoc_app/form_list_screen.dart';
 import 'package:vesseldoc_app/login_screen.dart';
+import 'package:vesseldoc_app/workers_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -90,7 +91,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => LoginScreen())),
+                                    builder: (_) => WorkersScreen())),
                             child: menuItem("Manage workers",
                                 "assets/workers2.png", 0XFFBF935A, 2)),
                       ),
@@ -157,7 +158,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => LoginScreen())),
+                                    builder: (_) => WorkersScreen())),
                             child: menuItem("Manage workers",
                                 "assets/workers2.png", 0XFFBF935A, 2)),
                       ),

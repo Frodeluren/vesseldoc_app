@@ -6,6 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:vesseldoc_app/datatableItem_widget.dart';
 import 'package:vesseldoc_app/tools.dart';
 
+import 'dashboard.dart';
+
 class FormCreatorScreen extends StatefulWidget {
   @override
   _FormCreatorScreenState createState() => _FormCreatorScreenState();
@@ -28,50 +30,54 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
   var tools = Tools();
 
   List<DataRow> datatableRows = new List<DataRow>();
+  final GlobalKey<ScaffoldState> _scaffoldKeyCreateNewForm =
+      new GlobalKey<ScaffoldState>();
 
   void buildJson() {
-    String jsonString;
-    jsonString = "{\"autoValidated\": false,";
-    jsonString += "\"fields\": [";
-    for (DatatableItemWidget item in tools.itemsInDataTable) {
-      String key = item.keyWidget;
-      String type = item.fieldType;
-      String label = item.fieldTextController.text;
-      String placeholder = item.fieldTextController.text;
-      bool isRequired = item.isRequired;
-      switch (item.fieldType) {
-        case "Header":
-          {
-            jsonString +=
-                "{\"key\": \"$key\", \"type\": \"Checkbox\", \"label\": \"$label\",  \"items\": [] },";
-            break;
-          }
-        case "Checkbox":
-          {
-            jsonString +=
-                "{\"key\": \"$key\", \"type\": \"$type\", \"label\": \"$label\", \"hiddenLabel\": \"true\",  \"items\": [{ \"label\": \"$label\", \"value\": false}] },";
-            break;
-          }
-        case "Switch":
-          {
-            jsonString +=
-                "{\"key\": \"$key\", \"type\": \"$type\", \"label\": \"$label\",  \"value\": false},";
-            break;
-          }
-        case "Input":
-          {
-            jsonString +=
-                "{\"key\": \"$key\", \"type\": \"$type\", \"label\": \"$label\", \"placeholder\": \"$placeholder\", \"required\": $isRequired },";
-            break;
-          }
+    if (tools.itemsInDataTable != null) {
+      String jsonString;
+      jsonString = "{\"autoValidated\": false,";
+      jsonString += "\"fields\": [";
+      for (DatatableItemWidget item in tools.itemsInDataTable) {
+        String key = item.keyWidget;
+        String type = item.fieldType;
+        String label = item.fieldText;
+        String placeholder = item.fieldText;
+        bool isRequired = item.isRequired;
+        switch (item.fieldType) {
+          case "Header":
+            {
+              jsonString +=
+                  "{\"key\": \"$key\", \"type\": \"Checkbox\", \"label\": \"$label\",  \"items\": [] },";
+              break;
+            }
+          case "Checkbox":
+            {
+              jsonString +=
+                  "{\"key\": \"$key\", \"type\": \"$type\", \"label\": \"$label\", \"hiddenLabel\": \"true\",  \"items\": [{ \"label\": \"$label\", \"value\": false}] },";
+              break;
+            }
+          case "Switch":
+            {
+              jsonString +=
+                  "{\"key\": \"$key\", \"type\": \"$type\", \"label\": \"$label\",  \"value\": false},";
+              break;
+            }
+          case "TextInput":
+            {
+              jsonString +=
+                  "{\"key\": \"$key\", \"type\": \"Input\", \"label\": \"$label\", \"placeholder\": \"$placeholder\", \"required\": $isRequired },";
+              break;
+            }
+        }
       }
+      int lastIndex = jsonString.lastIndexOf(",");
+      var jsonSub = jsonString.substring(0, lastIndex);
+      jsonSub += "]";
+      jsonSub += "}";
+      tools.uploadStructure(titleTextController.text, jsonSub);
+      tools.getListOfAvailableFormStructures();
     }
-    int lastIndex = jsonString.lastIndexOf(",");
-    var jsonSub = jsonString.substring(0,lastIndex);
-    jsonSub += "]";
-    jsonSub += "}";
-    tools.uploadStructure(titleTextController.text, jsonSub);
-    tools.getListOfAvailableFormStructures();
   }
 
   void addRowToDatatable() {
@@ -118,7 +124,7 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
             //currentWidget: currentWidget,
             fieldType: fieldType,
             keyWidget: key,
-            fieldTextController: fieldTextController,
+            fieldText: fieldTextController.text,
             photoAttached: photoAttached,
             isRequired: false,
             keySuper: keySuper);
@@ -131,6 +137,7 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKeyCreateNewForm,
       backgroundColor: Color.fromARGB(255, 30, 63, 90),
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 190, 147, 90),
@@ -292,9 +299,31 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                                     SizedBox(width: 20),
                                     RaisedButton(
                                         onPressed: () {
-                                          buildJson();
-                                          Navigator.of(context)
-                                              .pushReplacementNamed("/DashboardScreen");
+                                          _scaffoldKeyCreateNewForm.currentState
+                                              .showSnackBar(new SnackBar(
+                                            content: new Row(
+                                              children: <Widget>[
+                                                new CircularProgressIndicator(),
+                                                new Text(
+                                                    "   Creating new form structure..."),
+                                              ],
+                                            ),
+                                          ));
+                                          if (tools.itemsInDataTable != null) {
+                                            buildJson();
+                                            Future.delayed(
+                                                Duration(seconds: 1), () {Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (_) =>
+                                                        DashboardScreen(
+                                                          showSnackBar: true,
+                                                          message:
+                                                              "Congratulations! Your form was successfully created, and is now available in the formlist.",
+                                                        )));});         
+                                          } else {
+                                            // show message!
+                                          }
                                         },
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
@@ -401,7 +430,7 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
                                           value: "Switch",
                                           child: Text("Switch")),
                                       DropdownMenuItem(
-                                          value: "Input",
+                                          value: "TextInput",
                                           child: Text("Textinput"))
                                     ],
                                     onChanged: (value) {

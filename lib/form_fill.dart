@@ -239,7 +239,7 @@ class _FormFillerScreenState extends State<FormFillerScreen> {
                         ),
                       );
                     } else {
-                      return new CircularProgressIndicator();
+                      return Center(child: new CircularProgressIndicator());
                     }
                   },
                 ),

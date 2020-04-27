@@ -9,12 +9,12 @@ class DatatableItemWidget extends StatefulWidget {
   Widget currentWidget;
   String keyWidget;
   String photoAttached;
-  TextEditingController fieldTextController;
+  String fieldText;
   String fieldType;
   bool isRequired;
   String keySuper;
   
-  DatatableItemWidget({this.keyWidget,this.fieldType, this.fieldTextController, this.photoAttached, this.isRequired, this.keySuper}) : super(key: Key(keySuper));
+  DatatableItemWidget({this.keyWidget,this.fieldType, this.fieldText, this.photoAttached, this.isRequired, this.keySuper}) : super(key: Key(keySuper));
 }
 
 class _DatatableItemWidgetState extends State<DatatableItemWidget>  {
@@ -42,7 +42,7 @@ class _DatatableItemWidgetState extends State<DatatableItemWidget>  {
                     height: 40,
                     child: Center(
                       child: Text(
-                        widget.fieldTextController.text,
+                        widget.fieldText,
                         style: TextStyle(
                             color: Colors.black, fontWeight: FontWeight.bold),
                       ),
