@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:vesseldoc_app/form_fill.dart';
-import 'package:vesseldoc_app/form_fill_2.dart';
 import 'package:vesseldoc_app/form_structure.dart';
 import 'package:vesseldoc_app/tools.dart';
 
@@ -25,7 +24,7 @@ class _FormListScreenState extends State<FormListScreen> {
       backgroundColor: Color.fromARGB(255, 248, 248, 248),
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 190, 147, 90),
-        title: Text("Select form"),
+        title: Text("Select form structure"),
         centerTitle: true,
         actions: <Widget>[],
       ),

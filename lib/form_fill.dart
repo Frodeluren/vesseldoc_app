@@ -209,7 +209,6 @@ class _FormFillerScreenState extends State<FormFillerScreen> {
                                 new Text(text),
                               ],
                             ),
-                            //duration: Duration(seconds: 2),
                           );
                           _scaffoldKeySendList.currentState.showSnackBar(snack);
                           tools

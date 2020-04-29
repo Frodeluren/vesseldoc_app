@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import 'package:vesseldoc_app/filled_form.dart';
 import 'package:vesseldoc_app/form.dart';
 import 'package:vesseldoc_app/form_structure.dart';
 import 'package:vesseldoc_app/token_service.dart';
@@ -14,6 +15,7 @@ import 'package:http_parser/http_parser.dart';
 class Tools {
   static final Tools _tools = Tools._internal();
   static const String url = "http://vesseldoc.net:8080";
+  User currentUserLoggedIn;
 
   List<Widget> itemsInDataTable = new List<Widget>();
 
@@ -41,6 +43,43 @@ class Tools {
       ts.writeToken(response.body);
       var decData = json.decode(response.body);
       token = decData["token"];
+      getCurrentUser();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> register(String username, String password, String role) async {
+    String path = "/register";
+    Map<String, String> headers = {"Content-type": "application/json"};
+
+    var response = await http.post(url + path,
+        headers: headers,
+        body: '{"username": "$username", "password": "$password"}');
+
+    if (response.statusCode == 200) {
+      var responseOnRoleSet = await http.post(
+        url + "/user/set/role?username=$username&role=$role",
+        headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      );
+      if (responseOnRoleSet.statusCode == 200) {
+        print(responseOnRoleSet.body);
+        return true;
+      }
+      print(responseOnRoleSet.body);
+      return false;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> setUserRole(String username, String role) async {
+    var responseOnRoleSet = await http.post(
+      url + "/user/set/role?username=$username&role=$role",
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    if (responseOnRoleSet.statusCode == 200) {
       return true;
     } else {
       return false;
@@ -96,6 +135,44 @@ class Tools {
     return null;
   }
 
+  Future<List<FilledForm>> getListOfFilledOutForms() async {
+    List<FilledForm> listOfFilledForms = new List<FilledForm>();
+    final path = "/form/list";
+    final response = await http.get(
+      url + path,
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    if (response.statusCode == 200) {
+      final jsondata = json.decode(response.body);
+
+      for (var structure in jsondata) {
+        FilledForm filledForm = new FilledForm();
+        filledForm.name = structure[0];
+        filledForm.id = structure[0];
+        String timeStampRaw = structure[3];
+        filledForm.dateTime = timeStampRaw.substring(0, timeStampRaw.length-2);
+        //formStruct.name = structure[1];
+        listOfFilledForms.add(filledForm);
+      }
+      return listOfFilledForms;
+    }
+    return null;
+  }
+
+  Future<Map> getWantedFilledForm(FilledForm filledForm) async {
+    final path = "/form/get/" + filledForm.id;
+    final response = await http.get(
+      url + path,
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      Map<String, dynamic> map = json.decode(response.body);
+      return map;
+    } else
+      return null;
+  }
+
   Future<Map> getWantedFormStructure(FormStructure str) async {
     final path = "/structure/get/" + str.id.toString();
     final response = await http.get(
@@ -111,7 +188,7 @@ class Tools {
       return null;
   }
 
-  Future<User> getCurrentUSer() async {
+  Future<bool> getCurrentUser() async {
     final path = "/user/get/details";
     final response = await http.get(
       url + path,
@@ -126,9 +203,10 @@ class Tools {
       if (jsondata["roleId"] == 1) {
         user.role = "Deckcrew";
       }
-      return user;
+      currentUserLoggedIn = user;
+      return true;
     } else
-      return null;
+      return false;
   }
 
   Future<bool> uploadStructure(String title, dynamic data) async {
@@ -166,12 +244,12 @@ class Tools {
       final pathFilledForm = "/form/set?id=" + formId;
       //Make a file
       var temp = str.name;
-      print(data);
+      var jsonData = json.encode(data);
       Directory tempDir = await getTemporaryDirectory();
       String tempPath = tempDir.path;
       String fileName = tempPath + "/$temp.json";
 
-      new File(fileName).writeAsStringSync("$data");
+      new File(fileName).writeAsStringSync("$jsonData");
       var request =
           http.MultipartRequest('POST', Uri.parse(url + pathFilledForm));
       request.headers["authorization"] = "Bearer " + token;

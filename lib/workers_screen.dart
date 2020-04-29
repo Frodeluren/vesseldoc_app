@@ -4,8 +4,6 @@ import 'package:vesseldoc_app/tools.dart';
 import 'package:vesseldoc_app/user.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-import 'add_user.dart';
-
 class WorkersScreen extends StatefulWidget {
   @override
   _WorkersScreenState createState() => _WorkersScreenState();
@@ -17,7 +15,13 @@ class _WorkersScreenState extends State<WorkersScreen>
   TabBar tabBar;
   TextEditingController _usernameController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
+  TextEditingController _usernameEditController = new TextEditingController();
+  TextEditingController _passwordEditController = new TextEditingController();
+  String whichRoleEdit;
   String whichRole;
+
+  final GlobalKey<ScaffoldState> _scaffoldKeyCreateNewUser =
+      new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -26,7 +30,7 @@ class _WorkersScreenState extends State<WorkersScreen>
       length: 2,
       vsync: this,
     );
-    _future = tools.getListOfUsers();
+    _futureGetListOfUsers = tools.getListOfUsers();
   }
 
   List<Tab> myTabs = <Tab>[
@@ -37,11 +41,12 @@ class _WorkersScreenState extends State<WorkersScreen>
   ];
 
   var tools = new Tools();
-  Future<List<User>> _future;
+  Future<List<User>> _futureGetListOfUsers;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKeyCreateNewUser,
       resizeToAvoidBottomInset: false,
       backgroundColor: Color.fromARGB(255, 30, 63, 90),
       appBar: AppBar(
@@ -83,7 +88,7 @@ class _WorkersScreenState extends State<WorkersScreen>
                           height: MediaQuery.of(context).size.height * 0.15,
                         ),
                         Text(
-                          "Hello Admin",
+                          "Hello " + tools.currentUserLoggedIn.username,
                           style: GoogleFonts.roboto(
                             textStyle: TextStyle(
                                 color: Colors.black,
@@ -107,7 +112,7 @@ class _WorkersScreenState extends State<WorkersScreen>
                           height: MediaQuery.of(context).size.height * 0.01,
                         ),
                         Text(
-                          "Username",
+                          tools.currentUserLoggedIn.username,
                           style: GoogleFonts.roboto(
                             textStyle: TextStyle(
                                 color: Colors.black,
@@ -131,7 +136,7 @@ class _WorkersScreenState extends State<WorkersScreen>
                           height: MediaQuery.of(context).size.height * 0.01,
                         ),
                         Text(
-                          "Role",
+                          tools.currentUserLoggedIn.role,
                           style: GoogleFonts.roboto(
                             textStyle: TextStyle(
                                 color: Colors.black,
@@ -163,28 +168,28 @@ class _WorkersScreenState extends State<WorkersScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        new Container(
-                          margin: EdgeInsets.only(bottom: 20),
-                          width: MediaQuery.of(context).size.width * 0.25,
-                          decoration: new BoxDecoration(
-                              borderRadius: new BorderRadius.all(
-                                  new Radius.circular(10.0)),
-                              color: Colors.transparent),
-                          child: new TabBar(
-                              labelStyle: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal),
-                              labelColor: Colors.black,
-                              indicatorColor: Color.fromARGB(255, 190, 147, 90),
-                              controller: _controller,
-                              tabs: myTabs),
-                        ),
-                        SizedBox(width: 50),
-                      ],
-                    ),
+                    // Row(
+                    //   children: <Widget>[
+                    //     new Container(
+                    //       margin: EdgeInsets.only(bottom: 20),
+                    //       width: MediaQuery.of(context).size.width * 0.25,
+                    //       decoration: new BoxDecoration(
+                    //           borderRadius: new BorderRadius.all(
+                    //               new Radius.circular(10.0)),
+                    //           color: Colors.transparent),
+                    //       child: new TabBar(
+                    //           labelStyle: TextStyle(
+                    //               color: Colors.grey,
+                    //               fontSize: 14,
+                    //               fontWeight: FontWeight.normal),
+                    //           labelColor: Colors.black,
+                    //           indicatorColor: Color.fromARGB(255, 190, 147, 90),
+                    //           controller: _controller,
+                    //           tabs: myTabs),
+                    //     ),
+                    //     SizedBox(width: 50),
+                    //   ],
+                    // ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -247,7 +252,7 @@ class _WorkersScreenState extends State<WorkersScreen>
                                                             fontSize: 12.0)),
                                                   )),
                                               SizedBox(
-                                                height: 10,
+                                                height: 15,
                                               ),
                                               Align(
                                                   alignment:
@@ -276,7 +281,7 @@ class _WorkersScreenState extends State<WorkersScreen>
                                                             fontSize: 12.0)),
                                                   )),
                                               SizedBox(
-                                                height: 10,
+                                                height: 15,
                                               ),
                                               Align(
                                                   alignment:
@@ -376,7 +381,46 @@ class _WorkersScreenState extends State<WorkersScreen>
                                           MaterialButton(
                                             elevation: 5.0,
                                             child: Text("Add"),
-                                            onPressed: () {},
+                                            onPressed: () async {
+                                              tools
+                                                  .register(
+                                                      _usernameController.text,
+                                                      _passwordController.text,
+                                                      "ADMIN")
+                                                  .then((val) {
+                                                if (val == true) {
+                                                  setState(() {
+                                                    _futureGetListOfUsers =
+                                                        tools.getListOfUsers();
+                                                  });
+                                                  var snack = new SnackBar(
+                                                    content: new Row(
+                                                      children: <Widget>[
+                                                        new Text(
+                                                            "User was created!"),
+                                                      ],
+                                                    ),
+                                                  );
+                                                  _scaffoldKeyCreateNewUser
+                                                      .currentState
+                                                      .showSnackBar(snack);
+                                                }
+                                                if (val == false) {
+                                                  var snack = new SnackBar(
+                                                    content: new Row(
+                                                      children: <Widget>[
+                                                        new Text(
+                                                            "Something went wrong with the user creation..."),
+                                                      ],
+                                                    ),
+                                                  );
+                                                  _scaffoldKeyCreateNewUser
+                                                      .currentState
+                                                      .showSnackBar(snack);
+                                                }
+                                              });
+                                              Navigator.pop(context);
+                                            },
                                           )
                                         ],
                                       );
@@ -414,16 +458,15 @@ class _WorkersScreenState extends State<WorkersScreen>
                           borderRadius:
                               new BorderRadius.all(new Radius.circular(10.0)),
                         ),
-                        width: MediaQuery.of(context).size.width,
-                        child: FutureBuilder<List<User>>(
-                          future: _future,
-                          builder:
-                              (BuildContext context, AsyncSnapshot snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.done) {
-                              return SizedBox(
-                                width: MediaQuery.of(context).size.width*0.5,
-                                child: ListView.builder(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Container(
+                          child: FutureBuilder<List<User>>(
+                            future: _futureGetListOfUsers,
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                return ListView.builder(
                                     itemCount: snapshot.data.length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
@@ -431,101 +474,303 @@ class _WorkersScreenState extends State<WorkersScreen>
                                         height:
                                             MediaQuery.of(context).size.height *
                                                 0.09,
-                                        child: Slidable(
-                                          actionPane: SlidableBehindActionPane(),
-                                          actionExtentRatio: 0.1,
+                                        child: Card(
                                           child: Container(
-                                            color: Colors.white,
-                                            child: ListTile(
-                                              leading: CircleAvatar(
-                                                backgroundColor:
-                                                    Colors.indigoAccent,
-                                                child: Text(''),
-                                                foregroundColor: Colors.white,
-                                              ),
-                                              title: Text('Tile n°'),
-                                              subtitle:
-                                                  Text('SlidableDrawerDelegate'),
+                                            padding: EdgeInsets.all(10),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.25,
+                                                  child: Row(
+                                                    children: <Widget>[
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            "Username",
+                                                            style: GoogleFonts
+                                                                .roboto(
+                                                              textStyle: TextStyle(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .normal),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          Text(snapshot
+                                                              .data[index]
+                                                              .username),
+                                                        ],
+                                                      ),
+                                                      SizedBox(
+                                                        width: 100,
+                                                      ),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            "Role",
+                                                            style: GoogleFonts
+                                                                .roboto(
+                                                              textStyle: TextStyle(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .normal),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          Text(snapshot
+                                                              .data[index]
+                                                              .role),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Row(children: <Widget>[
+                                                  GestureDetector(
+                                                      onTap: () => {},
+                                                      child:
+                                                          Icon(Icons.delete)),
+                                                  SizedBox(
+                                                    width: 20,
+                                                  ),
+                                                  GestureDetector(
+                                                      onTap: () => {
+                                                            _usernameEditController
+                                                                    .text =
+                                                                snapshot
+                                                                    .data[index]
+                                                                    .username,
+                                                            whichRoleEdit =
+                                                                snapshot
+                                                                    .data[index]
+                                                                    .role,
+                                                            showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) {
+                                                                  return AlertDialog(
+                                                                    title: Text(
+                                                                      "Edit User",
+                                                                      style: GoogleFonts
+                                                                          .roboto(
+                                                                        textStyle: TextStyle(
+                                                                            color: Colors
+                                                                                .black,
+                                                                            fontSize:
+                                                                                22,
+                                                                            fontWeight:
+                                                                                FontWeight.bold),
+                                                                      ),
+                                                                    ),
+                                                                    content:
+                                                                        SizedBox(
+                                                                      height: MediaQuery.of(context)
+                                                                              .size
+                                                                              .height *
+                                                                          0.10,
+                                                                      child:
+                                                                          SingleChildScrollView(
+                                                                        child: Column(
+                                                                            children: <Widget>[
+                                                                              // Align(
+                                                                              //     alignment: Alignment.centerLeft,
+                                                                              //     child: Text(
+                                                                              //       "Username",
+                                                                              //       style: GoogleFonts.roboto(
+                                                                              //         textStyle: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+                                                                              //       ),
+                                                                              //     )),
+                                                                              // SizedBox(
+                                                                              //   height: 15,
+                                                                              // ),
+                                                                              // Align(
+                                                                              //     alignment: Alignment.centerLeft,
+                                                                              //     child: Text(
+                                                                              //       snapshot.data[index].username,
+                                                                              //       style: GoogleFonts.roboto(
+                                                                              //         textStyle: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.normal),
+                                                                              //       ),
+                                                                              //     )),
+                                                                              SizedBox(
+                                                                                height: 15,
+                                                                              ),
+                                                                              Align(
+                                                                                  alignment: Alignment.centerLeft,
+                                                                                  child: Text(
+                                                                                    "Role",
+                                                                                    style: GoogleFonts.roboto(
+                                                                                      textStyle: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+                                                                                    ),
+                                                                                  )),
+                                                                              DropdownButtonHideUnderline(
+                                                                                child: DropdownButton(
+                                                                                  icon: Icon(Icons.keyboard_arrow_down),
+                                                                                  isExpanded: true,
+                                                                                  hint: Text(
+                                                                                    "Role",
+                                                                                    style: GoogleFonts.roboto(
+                                                                                      textStyle: TextStyle(
+                                                                                        color: Colors.black54,
+                                                                                        fontSize: 12,
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                  items: [
+                                                                                    DropdownMenuItem(
+                                                                                        value: "Deckcrew",
+                                                                                        child: Text(
+                                                                                          "Deckcrew",
+                                                                                          style: GoogleFonts.roboto(
+                                                                                            textStyle: TextStyle(
+                                                                                              color: Colors.black,
+                                                                                              fontSize: 12,
+                                                                                            ),
+                                                                                          ),
+                                                                                        )),
+                                                                                    DropdownMenuItem(
+                                                                                        value: "Machinecrew",
+                                                                                        child: Text(
+                                                                                          "Machinecrew",
+                                                                                          style: GoogleFonts.roboto(
+                                                                                            textStyle: TextStyle(
+                                                                                              color: Colors.black,
+                                                                                              fontSize: 12,
+                                                                                            ),
+                                                                                          ),
+                                                                                        )),
+                                                                                    DropdownMenuItem(
+                                                                                        value: "Supervisor",
+                                                                                        child: Text(
+                                                                                          "Supervisor",
+                                                                                          style: GoogleFonts.roboto(
+                                                                                            textStyle: TextStyle(
+                                                                                              color: Colors.black,
+                                                                                              fontSize: 12,
+                                                                                            ),
+                                                                                          ),
+                                                                                        )),
+                                                                                    DropdownMenuItem(
+                                                                                        value: "Admin",
+                                                                                        child: Text(
+                                                                                          "Admin",
+                                                                                          style: GoogleFonts.roboto(
+                                                                                            textStyle: TextStyle(
+                                                                                              color: Colors.black,
+                                                                                              fontSize: 12,
+                                                                                            ),
+                                                                                          ),
+                                                                                        )),
+                                                                                  ],
+                                                                                  onChanged: (value) {
+                                                                                    setState(() {
+                                                                                      whichRoleEdit = value;
+                                                                                    });
+                                                                                  },
+                                                                                  style: GoogleFonts.roboto(
+                                                                                    textStyle: TextStyle(
+                                                                                      color: Colors.black,
+                                                                                    ),
+                                                                                  ),
+                                                                                  value: whichRoleEdit,
+                                                                                ),
+                                                                              ),
+                                                                            ]),
+                                                                      ),
+                                                                    ),
+                                                                    actions: <
+                                                                        Widget>[
+                                                                      MaterialButton(
+                                                                        elevation:
+                                                                            5.0,
+                                                                        child: Text(
+                                                                            "Cancel"),
+                                                                        onPressed:
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        },
+                                                                      ),
+                                                                      MaterialButton(
+                                                                        elevation:
+                                                                            5.0,
+                                                                        child: Text(
+                                                                            "Save"),
+                                                                        onPressed:
+                                                                            () async {
+                                                                          tools
+                                                                              .setUserRole(snapshot.data[index].username, "WORKER")
+                                                                              .then((val) {
+                                                                            if (val ==
+                                                                                true) {
+                                                                              setState(() {
+                                                                                _futureGetListOfUsers = tools.getListOfUsers();
+                                                                              });
+                                                                              var snack = new SnackBar(
+                                                                                content: new Row(
+                                                                                  children: <Widget>[
+                                                                                    new Text("New user role was set!"),
+                                                                                  ],
+                                                                                ),
+                                                                              );
+                                                                              _scaffoldKeyCreateNewUser.currentState.showSnackBar(snack);
+                                                                            }
+                                                                            if (val ==
+                                                                                false) {
+                                                                              var snack = new SnackBar(
+                                                                                content: new Row(
+                                                                                  children: <Widget>[
+                                                                                    new Text("Something went wrong with the user role change..."),
+                                                                                  ],
+                                                                                ),
+                                                                              );
+                                                                              _scaffoldKeyCreateNewUser.currentState.showSnackBar(snack);
+                                                                            }
+                                                                          });
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        },
+                                                                      )
+                                                                    ],
+                                                                  );
+                                                                })
+                                                          },
+                                                      child: Icon(Icons.edit))
+                                                ]),
+                                              ],
                                             ),
                                           ),
-                                          actions: <Widget>[],
-                                          secondaryActions: <Widget>[
-                                            IconSlideAction(
-                                              caption: 'More',
-                                              color: Colors.black45,
-                                              icon: Icons.more_horiz,
-                                              onTap: () => {},
-                                            ),
-                                            IconSlideAction(
-                                              caption: 'Delete',
-                                              color: Colors.red,
-                                              icon: Icons.delete,
-                                              onTap: () => {},
-                                            ),
-                                          ],
                                         ),
-                                        // child: Card(
-                                        //   child: Container(
-                                        //     padding: EdgeInsets.all(10),
-                                        //     child: Row(
-                                        //       children: <Widget>[
-                                        //         Column(
-                                        //           crossAxisAlignment:
-                                        //               CrossAxisAlignment.start,
-                                        //           children: <Widget>[
-                                        //             Text(
-                                        //               "Username",
-                                        //               style: GoogleFonts.roboto(
-                                        //                 textStyle: TextStyle(
-                                        //                     color: Colors.grey,
-                                        //                     fontSize: 14,
-                                        //                     fontWeight: FontWeight
-                                        //                         .normal),
-                                        //               ),
-                                        //             ),
-                                        //             SizedBox(
-                                        //               height: 5,
-                                        //             ),
-                                        //             Text(snapshot
-                                        //                 .data[index].username),
-                                        //           ],
-                                        //         ),
-                                        //         SizedBox(
-                                        //           width: 100,
-                                        //         ),
-                                        //         Column(
-                                        //           crossAxisAlignment:
-                                        //               CrossAxisAlignment.start,
-                                        //           children: <Widget>[
-                                        //             Text(
-                                        //               "Role",
-                                        //               style: GoogleFonts.roboto(
-                                        //                 textStyle: TextStyle(
-                                        //                     color: Colors.grey,
-                                        //                     fontSize: 14,
-                                        //                     fontWeight: FontWeight
-                                        //                         .normal),
-                                        //               ),
-                                        //             ),
-                                        //             SizedBox(
-                                        //               height: 5,
-                                        //             ),
-                                        //             Text(snapshot
-                                        //                 .data[index].role),
-                                        //           ],
-                                        //         ),
-                                        //       ],
-                                        //     ),
-                                        //   ),
-                                        // ),
                                       );
-                                    }),
-                              );
-                            } else {
-                              return Center(
-                                  child: new CircularProgressIndicator());
-                            }
-                          },
+                                    });
+                              } else {
+                                return Center(
+                                    child: new CircularProgressIndicator());
+                              }
+                            },
+                          ),
                         ),
                       ),
                     ),
