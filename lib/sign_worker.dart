@@ -25,6 +25,20 @@ class _SignWorkerScreenState extends State<SignWorkerScreen> {
   var tools = Tools();
   Future<List<FilledForm>> _future;
 
+  Widget getIcon(bool isSigned) {
+    if (isSigned == true) {
+      return Icon(
+        Icons.check,
+        color: Colors.green,
+      );
+    } else {
+      return Icon(
+        Icons.clear,
+        color: Colors.red,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,14 +140,16 @@ class _SignWorkerScreenState extends State<SignWorkerScreen> {
                                                 SizedBox(
                                                   height: 5,
                                                 ),
-                                                Text(filledForm.name),
+                                                Text(filledForm.id),
                                               ],
                                             ),
                                           ),
-                                          SizedBox(width: MediaQuery.of(context)
+                                          SizedBox(
+                                            width: MediaQuery.of(context)
                                                     .size
                                                     .width *
-                                                0.03,),
+                                                0.03,
+                                          ),
                                           Container(
                                             width: MediaQuery.of(context)
                                                     .size
@@ -179,7 +195,7 @@ class _SignWorkerScreenState extends State<SignWorkerScreen> {
                                         SizedBox(
                                           height: 5,
                                         ),
-                                        Icon(Icons.clear, color: Colors.red,),
+                                        getIcon(filledForm.isSigned),
                                       ],
                                     ),
                                   ]))));

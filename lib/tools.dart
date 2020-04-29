@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -147,11 +148,15 @@ class Tools {
 
       for (var structure in jsondata) {
         FilledForm filledForm = new FilledForm();
+        Map test = structure[2];
+        dynamic temp = test.values.toList();
+
         filledForm.name = structure[0];
-        filledForm.id = structure[0];
-        String timeStampRaw = structure[3];
-        filledForm.dateTime = timeStampRaw.substring(0, timeStampRaw.length-2);
-        //formStruct.name = structure[1];
+        filledForm.id = temp[0];
+        filledForm.isSigned = temp[4];
+        String timeStampRaw = temp[3];
+        filledForm.dateTime =
+            timeStampRaw.substring(0, timeStampRaw.length - 9);
         listOfFilledForms.add(filledForm);
       }
       return listOfFilledForms;

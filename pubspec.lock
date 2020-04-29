@@ -119,9 +119,11 @@ packages:
   json_to_form:
     dependency: "direct main"
     description:
-      name: json_to_form
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: master
+      resolved-ref: "3cf0d5b6b31404516b9fe7885241697a4d54cb4a"
+      url: "git://github.com/VesselDoc/json_to_form.git"
+    source: git
     version: "0.0.4"
   matcher:
     dependency: transitive
