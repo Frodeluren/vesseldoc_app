@@ -1,11 +1,10 @@
 class User {
-  User(this.username, this.password);
+  User(this.username);
   final String username;
-  final String password;
+  String role;
   String token;
 
   Map<String, dynamic> toJson() => {
         'username': username,
-        'password': password,
       };
 }

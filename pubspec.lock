@@ -64,11 +64,32 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.3"
+  dio:
+    dependency: "direct main"
+    description:
+      name: dio
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.9"
   flutter:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_device_type:
+    dependency: "direct main"
+    description:
+      name: flutter_device_type
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
+  flutter_slidable:
+    dependency: "direct main"
+    description:
+      name: flutter_slidable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.4"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -105,9 +126,11 @@ packages:
   json_to_form:
     dependency: "direct main"
     description:
-      name: json_to_form
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: master
+      resolved-ref: aa3053fa7435bf055c12e11f3825d524f303b7b8
+      url: "git://github.com/VesselDoc/json_to_form.git"
+    source: git
     version: "0.0.4"
   matcher:
     dependency: transitive
