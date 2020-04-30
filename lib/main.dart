@@ -4,7 +4,6 @@ import 'login_screen.dart';
 import 'dashboard.dart';
 import 'form_creator.dart';
 import 'form_fill.dart';
-import 'decortest.dart';
 
 void main() => runApp(MyApp());
 
@@ -20,7 +19,6 @@ class MyApp extends StatelessWidget {
         "/DashboardScreen": (BuildContext context) => new DashboardScreen(),
         "/FormCreatorScreen": (BuildContext context) => new FormCreatorScreen(),
         "/FormFillerScreen": (BuildContext context) => new FormFillerScreen(),
-        "/FormFill": (BuildContext context) => new RegisterMap(),
       },
     );
   }
