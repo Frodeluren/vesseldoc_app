@@ -33,6 +33,13 @@ class _WorkersScreenState extends State<WorkersScreen>
     _futureGetListOfUsers = tools.getListOfUsers();
   }
 
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   List<Tab> myTabs = <Tab>[
     new Tab(text: "Active users"),
     new Tab(
@@ -209,220 +216,234 @@ class _WorkersScreenState extends State<WorkersScreen>
                                 showDialog(
                                     context: context,
                                     builder: (context) {
-                                      return AlertDialog(
-                                        title: Text(
-                                          "Add User",
-                                          style: GoogleFonts.roboto(
-                                            textStyle: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 22,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        content: SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.28,
-                                          child: SingleChildScrollView(
-                                            child: Column(children: <Widget>[
-                                              Align(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Text(
-                                                    "Username",
-                                                    style: GoogleFonts.roboto(
-                                                      textStyle: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  )),
-                                              Align(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: TextField(
-                                                    controller:
-                                                        _usernameController,
-                                                    decoration: InputDecoration(
-                                                        hintText: "Username",
-                                                        hintStyle: TextStyle(
-                                                            color: Colors.grey,
-                                                            fontSize: 12.0)),
-                                                  )),
-                                              SizedBox(
-                                                height: 15,
+                                      return StatefulBuilder(
+                                        builder:
+                                            (context, StateSetter setState) {
+                                          return AlertDialog(
+                                            title: Text(
+                                              "Add User",
+                                              style: GoogleFonts.roboto(
+                                                textStyle: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 22,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
-                                              Align(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Text(
-                                                    "Password",
-                                                    style: GoogleFonts.roboto(
-                                                      textStyle: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  )),
-                                              Align(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: TextField(
-                                                    obscureText: true,
-                                                    controller:
-                                                        _passwordController,
-                                                    decoration: InputDecoration(
-                                                        hintText: "Password",
-                                                        hintStyle: TextStyle(
-                                                            color: Colors.grey,
-                                                            fontSize: 12.0)),
-                                                  )),
-                                              SizedBox(
-                                                height: 15,
-                                              ),
-                                              Align(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Text(
-                                                    "Role",
-                                                    style: GoogleFonts.roboto(
-                                                      textStyle: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  )),
-                                              DropdownButtonHideUnderline(
-                                                child: DropdownButton(
-                                                  icon: Icon(Icons
-                                                      .keyboard_arrow_down),
-                                                  isExpanded: true,
-                                                  hint: Text(
-                                                    "Role",
-                                                    style: GoogleFonts.roboto(
-                                                      textStyle: TextStyle(
-                                                        color: Colors.black54,
-                                                        fontSize: 12,
+                                            ),
+                                            content: SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.28,
+                                              child: SingleChildScrollView(
+                                                child:
+                                                    Column(children: <Widget>[
+                                                  Align(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: Text(
+                                                        "Username",
+                                                        style:
+                                                            GoogleFonts.roboto(
+                                                          textStyle: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      )),
+                                                  Align(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: TextField(
+                                                        controller:
+                                                            _usernameController,
+                                                        decoration: InputDecoration(
+                                                            hintText:
+                                                                "Username",
+                                                            hintStyle: TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize:
+                                                                    12.0)),
+                                                      )),
+                                                  SizedBox(
+                                                    height: 15,
+                                                  ),
+                                                  Align(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: Text(
+                                                        "Password",
+                                                        style:
+                                                            GoogleFonts.roboto(
+                                                          textStyle: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      )),
+                                                  Align(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: TextField(
+                                                        obscureText: true,
+                                                        controller:
+                                                            _passwordController,
+                                                        decoration: InputDecoration(
+                                                            hintText:
+                                                                "Password",
+                                                            hintStyle: TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize:
+                                                                    12.0)),
+                                                      )),
+                                                  SizedBox(
+                                                    height: 15,
+                                                  ),
+                                                  Align(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: Text(
+                                                        "Role",
+                                                        style:
+                                                            GoogleFonts.roboto(
+                                                          textStyle: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      )),
+                                                  DropdownButtonHideUnderline(
+                                                    child: DropdownButton(
+                                                      icon: Icon(Icons
+                                                          .keyboard_arrow_down),
+                                                      isExpanded: true,
+                                                      hint: Text(
+                                                        "Role",
+                                                        style:
+                                                            GoogleFonts.roboto(
+                                                          textStyle: TextStyle(
+                                                            color:
+                                                                Colors.black54,
+                                                            fontSize: 12,
+                                                          ),
+                                                        ),
                                                       ),
+                                                      items: [
+                                                        DropdownMenuItem(
+                                                            value: "Worker",
+                                                            child: Text(
+                                                              "Worker",
+                                                              style: GoogleFonts
+                                                                  .roboto(
+                                                                textStyle:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 12,
+                                                                ),
+                                                              ),
+                                                            )),
+                                                        DropdownMenuItem(
+                                                            value: "Admin",
+                                                            child: Text(
+                                                              "Admin",
+                                                              style: GoogleFonts
+                                                                  .roboto(
+                                                                textStyle:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 12,
+                                                                ),
+                                                              ),
+                                                            )),
+                                                      ],
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          whichRole = value;
+                                                        });
+                                                      },
+                                                      style: GoogleFonts.roboto(
+                                                        textStyle: TextStyle(
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                      value: whichRole,
                                                     ),
                                                   ),
-                                                  items: [
-                                                    DropdownMenuItem(
-                                                        value: "Deckcrew",
-                                                        child: Text(
-                                                          "Deckcrew",
-                                                          style: GoogleFonts
-                                                              .roboto(
-                                                            textStyle:
-                                                                TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 12,
-                                                            ),
-                                                          ),
-                                                        )),
-                                                    DropdownMenuItem(
-                                                        value: "Machinecrew",
-                                                        child: Text(
-                                                          "Machinecrew",
-                                                          style: GoogleFonts
-                                                              .roboto(
-                                                            textStyle:
-                                                                TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 12,
-                                                            ),
-                                                          ),
-                                                        )),
-                                                    DropdownMenuItem(
-                                                        value: "Supervisor",
-                                                        child: Text(
-                                                          "Supervisor",
-                                                          style: GoogleFonts
-                                                              .roboto(
-                                                            textStyle:
-                                                                TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 12,
-                                                            ),
-                                                          ),
-                                                        )),
-                                                  ],
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      whichRole = value;
-                                                    });
-                                                  },
-                                                  style: GoogleFonts.roboto(
-                                                    textStyle: TextStyle(
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                  value: whichRole,
-                                                ),
+                                                ]),
                                               ),
-                                            ]),
-                                          ),
-                                        ),
-                                        actions: <Widget>[
-                                          MaterialButton(
-                                            elevation: 5.0,
-                                            child: Text("Cancel"),
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                          MaterialButton(
-                                            elevation: 5.0,
-                                            child: Text("Add"),
-                                            onPressed: () async {
-                                              tools
-                                                  .register(
-                                                      _usernameController.text,
-                                                      _passwordController.text,
-                                                      "ADMIN")
-                                                  .then((val) {
-                                                if (val == true) {
-                                                  setState(() {
-                                                    _futureGetListOfUsers =
-                                                        tools.getListOfUsers();
+                                            ),
+                                            actions: <Widget>[
+                                              MaterialButton(
+                                                elevation: 5.0,
+                                                child: Text("Cancel"),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                              MaterialButton(
+                                                elevation: 5.0,
+                                                child: Text("Add"),
+                                                onPressed: () async {
+                                                  tools
+                                                      .register(
+                                                          _usernameController
+                                                              .text,
+                                                          _passwordController
+                                                              .text,
+                                                          whichRole
+                                                              .toUpperCase())
+                                                      .then((val) {
+                                                    if (val == true) {
+                                                      setState(() {
+                                                        _futureGetListOfUsers =
+                                                            tools
+                                                                .getListOfUsers();
+                                                      });
+                                                      var snack = new SnackBar(
+                                                        content: new Row(
+                                                          children: <Widget>[
+                                                            new Text(
+                                                                "User was created!"),
+                                                          ],
+                                                        ),
+                                                      );
+                                                      _scaffoldKeyCreateNewUser
+                                                          .currentState
+                                                          .showSnackBar(snack);
+                                                    }
+                                                    if (val == false) {
+                                                      var snack = new SnackBar(
+                                                        content: new Row(
+                                                          children: <Widget>[
+                                                            new Text(
+                                                                "Something went wrong with the user creation..."),
+                                                          ],
+                                                        ),
+                                                      );
+                                                      _scaffoldKeyCreateNewUser
+                                                          .currentState
+                                                          .showSnackBar(snack);
+                                                    }
                                                   });
-                                                  var snack = new SnackBar(
-                                                    content: new Row(
-                                                      children: <Widget>[
-                                                        new Text(
-                                                            "User was created!"),
-                                                      ],
-                                                    ),
-                                                  );
-                                                  _scaffoldKeyCreateNewUser
-                                                      .currentState
-                                                      .showSnackBar(snack);
-                                                }
-                                                if (val == false) {
-                                                  var snack = new SnackBar(
-                                                    content: new Row(
-                                                      children: <Widget>[
-                                                        new Text(
-                                                            "Something went wrong with the user creation..."),
-                                                      ],
-                                                    ),
-                                                  );
-                                                  _scaffoldKeyCreateNewUser
-                                                      .currentState
-                                                      .showSnackBar(snack);
-                                                }
-                                              });
-                                              Navigator.pop(context);
-                                            },
-                                          )
-                                        ],
+                                                  Navigator.pop(context);
+                                                },
+                                              )
+                                            ],
+                                          );
+                                        },
                                       );
                                     });
                               },
@@ -571,49 +592,30 @@ class _WorkersScreenState extends State<WorkersScreen>
                                                                     context,
                                                                 builder:
                                                                     (context) {
-                                                                  return AlertDialog(
-                                                                    title: Text(
-                                                                      "Edit User",
-                                                                      style: GoogleFonts
-                                                                          .roboto(
-                                                                        textStyle: TextStyle(
-                                                                            color: Colors
-                                                                                .black,
-                                                                            fontSize:
-                                                                                22,
-                                                                            fontWeight:
-                                                                                FontWeight.bold),
-                                                                      ),
-                                                                    ),
-                                                                    content:
-                                                                        SizedBox(
-                                                                      height: MediaQuery.of(context)
-                                                                              .size
-                                                                              .height *
-                                                                          0.10,
-                                                                      child:
-                                                                          SingleChildScrollView(
-                                                                        child: Column(
-                                                                            children: <Widget>[
-                                                                              // Align(
-                                                                              //     alignment: Alignment.centerLeft,
-                                                                              //     child: Text(
-                                                                              //       "Username",
-                                                                              //       style: GoogleFonts.roboto(
-                                                                              //         textStyle: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
-                                                                              //       ),
-                                                                              //     )),
-                                                                              // SizedBox(
-                                                                              //   height: 15,
-                                                                              // ),
-                                                                              // Align(
-                                                                              //     alignment: Alignment.centerLeft,
-                                                                              //     child: Text(
-                                                                              //       snapshot.data[index].username,
-                                                                              //       style: GoogleFonts.roboto(
-                                                                              //         textStyle: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.normal),
-                                                                              //       ),
-                                                                              //     )),
+                                                                  return StatefulBuilder(
+                                                                    builder: (context,
+                                                                        StateSetter
+                                                                            setState) {
+                                                                      return AlertDialog(
+                                                                        title:
+                                                                            Text(
+                                                                          "Edit User",
+                                                                          style:
+                                                                              GoogleFonts.roboto(
+                                                                            textStyle: TextStyle(
+                                                                                color: Colors.black,
+                                                                                fontSize: 22,
+                                                                                fontWeight: FontWeight.bold),
+                                                                          ),
+                                                                        ),
+                                                                        content:
+                                                                            SizedBox(
+                                                                          height:
+                                                                              MediaQuery.of(context).size.height * 0.10,
+                                                                          child:
+                                                                              SingleChildScrollView(
+                                                                            child:
+                                                                                Column(children: <Widget>[
                                                                               SizedBox(
                                                                                 height: 15,
                                                                               ),
@@ -676,62 +678,73 @@ class _WorkersScreenState extends State<WorkersScreen>
                                                                                 ),
                                                                               ),
                                                                             ]),
-                                                                      ),
-                                                                    ),
-                                                                    actions: <
-                                                                        Widget>[
-                                                                      MaterialButton(
-                                                                        elevation:
-                                                                            5.0,
-                                                                        child: Text(
-                                                                            "Cancel"),
-                                                                        onPressed:
-                                                                            () {
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                        },
-                                                                      ),
-                                                                      MaterialButton(
-                                                                        elevation:
-                                                                            5.0,
-                                                                        child: Text(
-                                                                            "Save"),
-                                                                        onPressed:
-                                                                            () async {
-                                                                          tools
-                                                                              .setUserRole(snapshot.data[index].username, whichRoleEdit)
-                                                                              .then((val) {
-                                                                            if (val ==
-                                                                                true) {
-                                                                              setState(() {
-                                                                                _futureGetListOfUsers = tools.getListOfUsers();
-                                                                              });
-                                                                              var snack = new SnackBar(
-                                                                                content: new Row(
-                                                                                  children: <Widget>[
-                                                                                    new Text("New user role was set!"),
-                                                                                  ],
-                                                                                ),
-                                                                              );
-                                                                              _scaffoldKeyCreateNewUser.currentState.showSnackBar(snack);
-                                                                            }
-                                                                            if (val ==
-                                                                                false) {
-                                                                              var snack = new SnackBar(
-                                                                                content: new Row(
-                                                                                  children: <Widget>[
-                                                                                    new Text("Something went wrong with the user role change..."),
-                                                                                  ],
-                                                                                ),
-                                                                              );
-                                                                              _scaffoldKeyCreateNewUser.currentState.showSnackBar(snack);
-                                                                            }
-                                                                          });
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                        },
-                                                                      )
-                                                                    ],
+                                                                          ),
+                                                                        ),
+                                                                        actions: <
+                                                                            Widget>[
+                                                                          MaterialButton(
+                                                                            elevation:
+                                                                                5.0,
+                                                                            child:
+                                                                                Text("Cancel"),
+                                                                            onPressed:
+                                                                                () {
+                                                                              Navigator.pop(context);
+                                                                            },
+                                                                          ),
+                                                                          MaterialButton(
+                                                                            elevation:
+                                                                                5.0,
+                                                                            child:
+                                                                                Text("Save"),
+                                                                            onPressed:
+                                                                                () async {
+                                                                              if (snapshot.data[index].role != whichRoleEdit) {
+                                                                                tools.setUserRole(snapshot.data[index].username, whichRoleEdit).then((val) {
+                                                                                  if (val == true) {
+                                                                                    if (mounted) {
+                                                                                      this.setState(() {
+                                                                                        _futureGetListOfUsers = tools.getListOfUsers();
+                                                                                      });
+                                                                                    }
+
+                                                                                    var snack = new SnackBar(
+                                                                                      content: new Row(
+                                                                                        children: <Widget>[
+                                                                                          new Text("New user role was set!"),
+                                                                                        ],
+                                                                                      ),
+                                                                                    );
+                                                                                    _scaffoldKeyCreateNewUser.currentState.showSnackBar(snack);
+                                                                                  }
+                                                                                  if (val == false) {
+                                                                                    var snack = new SnackBar(
+                                                                                      content: new Row(
+                                                                                        children: <Widget>[
+                                                                                          new Text("Something went wrong with the user role change..."),
+                                                                                        ],
+                                                                                      ),
+                                                                                    );
+                                                                                    _scaffoldKeyCreateNewUser.currentState.showSnackBar(snack);
+                                                                                  }
+                                                                                });
+                                                                              } else {
+                                                                                var snack = new SnackBar(
+                                                                                  content: new Row(
+                                                                                    children: <Widget>[
+                                                                                      new Text("User already have that role!..."),
+                                                                                    ],
+                                                                                  ),
+                                                                                );
+                                                                                _scaffoldKeyCreateNewUser.currentState.showSnackBar(snack);
+                                                                              }
+
+                                                                              Navigator.pop(context);
+                                                                            },
+                                                                          )
+                                                                        ],
+                                                                      );
+                                                                    },
                                                                   );
                                                                 })
                                                           },

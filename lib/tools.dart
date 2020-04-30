@@ -59,8 +59,9 @@ class Tools {
     var response = await http.post(url + path,
         headers: headers,
         body: '{"username": "$username", "password": "$password"}');
-
+    print(response.body);
     if (response.statusCode == 200) {
+      if(role  != "WORKER"){
       var responseOnRoleSet = await http.post(
         url + "/user/set/role?username=$username&role=$role",
         headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
@@ -69,8 +70,8 @@ class Tools {
         print(responseOnRoleSet.body);
         return true;
       }
-      print(responseOnRoleSet.body);
-      return false;
+      }
+      return true;
     } else {
       return false;
     }
