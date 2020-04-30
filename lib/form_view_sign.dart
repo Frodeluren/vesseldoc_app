@@ -1,7 +1,10 @@
+import 'package:google_fonts/google_fonts.dart';
 import 'package:json_to_form/json_schema.dart';
 import 'package:flutter/material.dart';
 import 'package:vesseldoc_app/filled_form.dart';
 import 'package:vesseldoc_app/tools.dart';
+
+import 'dashboard.dart';
 
 class FormSignSpecificScreen extends StatefulWidget {
   @override
@@ -23,6 +26,59 @@ class _FormSignSpecificScreenState extends State<FormSignSpecificScreen> {
   var tools = Tools();
   Future<Map> _future;
 
+  Widget getIcon(bool isSigned) {
+    if (isSigned == true) {
+      return Icon(
+        Icons.check,
+        color: Colors.green,
+      );
+    } else {
+      return Icon(
+        Icons.clear,
+        color: Colors.red,
+      );
+    }
+  }
+
+  Widget getSignContainer(bool isSigned) {
+    if (isSigned == false) {
+      return GestureDetector(
+        onTap: () => {
+          tools.signForm(widget.filledForm).then((val) {
+            _scaffoldKeySendList.currentState.showSnackBar(new SnackBar(
+              content: new Row(
+                children: <Widget>[
+                  new CircularProgressIndicator(),
+                  new Text("   Signing form..."),
+                ],
+              ),
+            ));
+            Future.delayed(Duration(seconds: 1), () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => DashboardScreen(
+                            showSnackBar: true,
+                            message: " The form was successfully signed.",
+                          )));
+            });
+          })
+        },
+        child: new Container(
+          height: 40.0,
+          color: Color.fromARGB(255, 190, 147, 90),
+          child: Center(
+            child: Text("Sign",
+                style: TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold)),
+          ),
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
   dynamic response;
   dynamic data;
   @override
@@ -33,7 +89,7 @@ class _FormSignSpecificScreenState extends State<FormSignSpecificScreen> {
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 190, 147, 90),
         title: Text(
-          widget.filledForm.name ?? "",
+          "Form details",
         ),
         centerTitle: true,
         actions: <Widget>[],
@@ -63,8 +119,186 @@ class _FormSignSpecificScreenState extends State<FormSignSpecificScreen> {
                       return Container(
                         child: Column(
                           children: <Widget>[
+                            Container(
+                              child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.64,
+                                          child: Row(
+                                            children: <Widget>[
+                                              Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.35,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "Name",
+                                                      style: GoogleFonts.roboto(
+                                                        textStyle: TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    Text(
+                                                        widget.filledForm.name),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.03,
+                                              ),
+                                              Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.26,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "Timestamp",
+                                                      style: GoogleFonts.roboto(
+                                                        textStyle: TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    Text(widget
+                                                        .filledForm.dateTime),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text(
+                                              "Signed",
+                                              style: GoogleFonts.roboto(
+                                                textStyle: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            getIcon(widget.filledForm.isSigned)
+                                          ],
+                                        ),
+                                      ])),
+                            ),
+                            Container(
+                                padding: EdgeInsets.all(10),
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.64,
+                                        child: Row(
+                                          children: <Widget>[
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.35,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Text(
+                                                    "Registered by",
+                                                    style: GoogleFonts.roboto(
+                                                      textStyle: TextStyle(
+                                                          color: Colors.grey,
+                                                          fontSize: 14,
+                                                          fontWeight: FontWeight
+                                                              .normal),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Text(widget
+                                                      .filledForm.whichUser),
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.03,
+                                            ),
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.26,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Text(
+                                                    "ID",
+                                                    style: GoogleFonts.roboto(
+                                                      textStyle: TextStyle(
+                                                          color: Colors.grey,
+                                                          fontSize: 14,
+                                                          fontWeight: FontWeight
+                                                              .normal),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Text(widget.filledForm.id),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ])),
+                            Divider(),
                             IgnorePointer(
                               child: new JsonSchema(
+                                color: Colors.grey,
                                 formMap: snapshot.data,
                                 onChanged: (dynamic response) {
                                   this.response = response;
@@ -73,16 +307,7 @@ class _FormSignSpecificScreenState extends State<FormSignSpecificScreen> {
                                 actionSave: (dynamic data) async {},
                               ),
                             ),
-                            new Container(
-                              height: 40.0,
-                              color: Color.fromARGB(255, 190, 147, 90),
-                              child: Center(
-                                child: Text("Sign",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                            ),
+                            getSignContainer(widget.filledForm.isSigned),
                           ],
                         ),
                       );

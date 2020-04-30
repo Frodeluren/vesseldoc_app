@@ -194,6 +194,7 @@ class _FormFillerScreenState extends State<FormFillerScreen> {
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       return new JsonSchema(
+                        color: Color.fromARGB(255, 190, 147, 90),
                         formMap: snapshot.data,
                         onChanged: (dynamic response) {
                           this.response = response;

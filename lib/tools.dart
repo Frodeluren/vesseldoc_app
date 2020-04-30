@@ -15,7 +15,7 @@ import 'package:http_parser/http_parser.dart';
 
 class Tools {
   static final Tools _tools = Tools._internal();
-  static const String url = "http://vesseldoc.net:8080";
+  static const String url = "http://vesseldoc.net:80";
   User currentUserLoggedIn;
 
   List<Widget> itemsInDataTable = new List<Widget>();
@@ -37,9 +37,9 @@ class Tools {
         headers: headers,
         body: '{"username": "$username", "password": "$password"}');
     print("Response code: ${response.statusCode}");
-    print("Response body: ${response.body}");
-
-    if (response.statusCode == 200) {
+    print("Response body: ${response.headers}");
+    
+    if (response.statusCode == 200) { 
       TokenService ts = new TokenService();
       ts.writeToken(response.body);
       var decData = json.decode(response.body);
@@ -87,6 +87,19 @@ class Tools {
     }
   }
 
+  Future<bool> signForm(FilledForm form) async {
+    var formId = form.id;
+    var response = await http.post(
+      url + "/form/set/sign?form_id=$formId",
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<List<User>> getListOfUsers() async {
     List<User> listOfUsers = new List<User>();
     String path = "/user/get/list";
@@ -105,7 +118,7 @@ class Tools {
           user.role = "Admin";
         }
         if (item["roleId"] == 1) {
-          user.role = "Deckcrew";
+          user.role = "Worker";
         }
         listOfUsers.add(user);
       }
@@ -150,7 +163,36 @@ class Tools {
         FilledForm filledForm = new FilledForm();
         Map test = structure[2];
         dynamic temp = test.values.toList();
+        filledForm.whichUser = structure[1];
+        filledForm.signedBy = temp[5].toString();
+        filledForm.name = structure[0];
+        filledForm.id = temp[0];
+        filledForm.isSigned = temp[4];
+        String timeStampRaw = temp[3];
+        filledForm.dateTime =
+            timeStampRaw.substring(0, timeStampRaw.length - 9);
+        listOfFilledForms.add(filledForm);
+      }
+      return listOfFilledForms;
+    }
+    return null;
+  }
 
+  Future<List<FilledForm>> getListOfAllUnsignedFilledOutForms() async {
+    List<FilledForm> listOfFilledForms = new List<FilledForm>();
+    final path = "/form/list/notsigned";
+    final response = await http.get(
+      url + path,
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    if (response.statusCode == 200) {
+      final jsondata = json.decode(response.body);
+
+      for (var structure in jsondata) {
+        FilledForm filledForm = new FilledForm();
+        Map test = structure[2];
+        dynamic temp = test.values.toList();
+        filledForm.signedBy = temp[5].toString();
         filledForm.name = structure[0];
         filledForm.id = temp[0];
         filledForm.isSigned = temp[4];
@@ -206,7 +248,7 @@ class Tools {
         user.role = "Admin";
       }
       if (jsondata["roleId"] == 1) {
-        user.role = "Deckcrew";
+        user.role = "Worker";
       }
       currentUserLoggedIn = user;
       return true;

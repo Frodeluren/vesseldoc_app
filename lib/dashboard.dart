@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vesseldoc_app/form_creator.dart';
 import 'package:vesseldoc_app/form_list_screen.dart';
-import 'package:vesseldoc_app/login_screen.dart';
+import 'package:vesseldoc_app/sign_supervisor.dart';
 import 'package:vesseldoc_app/sign_worker.dart';
+import 'package:vesseldoc_app/tools.dart';
 import 'package:vesseldoc_app/workers_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -40,6 +41,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  var tools = new Tools();
 
   Widget dashBoard() {
     if (MediaQuery.of(context).orientation == Orientation.portrait) {
@@ -79,8 +81,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           height: MediaQuery.of(context).size.width * 0.01),
                       Expanded(
                         child: GestureDetector(
-                          onTap: () => Navigator.push(context,
-                              MaterialPageRoute(builder: (_) => SignWorkerScreen())),
+                          onTap: () => {
+                            if (tools.currentUserLoggedIn.role == "Worker")
+                              {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => SignWorkerScreen()))
+                              }
+                            else
+                              {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => SignSupervisorScreen()))
+                              }
+                          },
                           child: menuItem(
                               "Sign", "assets/sign2.png", 0XFFBF935A, 2),
                         ),
@@ -147,8 +163,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     children: <Widget>[
                       Expanded(
                         child: GestureDetector(
-                          onTap: () => Navigator.push(context,
-                              MaterialPageRoute(builder: (_) => SignWorkerScreen())),
+                          onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => SignSupervisorScreen())),
                           child: menuItem(
                               "Sign", "assets/sign2.png", 0XFFBF935A, 2),
                         ),

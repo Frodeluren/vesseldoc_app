@@ -121,7 +121,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "3cf0d5b6b31404516b9fe7885241697a4d54cb4a"
+      resolved-ref: aa3053fa7435bf055c12e11f3825d524f303b7b8
       url: "git://github.com/VesselDoc/json_to_form.git"
     source: git
     version: "0.0.4"

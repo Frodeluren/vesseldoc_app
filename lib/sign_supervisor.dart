@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vesseldoc_app/form_details_worker.dart';
 import 'package:vesseldoc_app/form_view_sign.dart';
 import 'package:vesseldoc_app/tools.dart';
 
@@ -8,15 +7,15 @@ import 'filled_form.dart';
 import 'form_fill.dart';
 import 'form_structure.dart';
 
-class SignWorkerScreen extends StatefulWidget {
+class SignSupervisorScreen extends StatefulWidget {
   @override
-  _SignWorkerScreenState createState() => _SignWorkerScreenState();
+  _SignSupervisorScreenState createState() => _SignSupervisorScreenState();
 
   FormStructure formStructure;
-  SignWorkerScreen({this.formStructure});
+  SignSupervisorScreen({this.formStructure});
 }
 
-class _SignWorkerScreenState extends State<SignWorkerScreen> {
+class _SignSupervisorScreenState extends State<SignSupervisorScreen> {
   @override
   void initState() {
     super.initState();
@@ -63,7 +62,7 @@ class _SignWorkerScreenState extends State<SignWorkerScreen> {
                 Icons.update,
               ),
             ),
-          ),
+          )
         ],
       ),
       body: Container(
@@ -121,7 +120,7 @@ class _SignWorkerScreenState extends State<SignWorkerScreen> {
                       onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (_) => FormDetailsWorkerScreen(
+                              builder: (_) => FormSignSpecificScreen(
                                   filledForm: filledForm))),
                       child: Card(
                           child: Container(
@@ -139,13 +138,13 @@ class _SignWorkerScreenState extends State<SignWorkerScreen> {
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
-                                                0.35,
+                                                0.2,
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: <Widget>[
                                                 Text(
-                                                  "ID",
+                                                  "Name",
                                                   style: GoogleFonts.roboto(
                                                     textStyle: TextStyle(
                                                         color: Colors.grey,
@@ -157,7 +156,33 @@ class _SignWorkerScreenState extends State<SignWorkerScreen> {
                                                 SizedBox(
                                                   height: 5,
                                                 ),
-                                                Text(filledForm.id),
+                                                Text(filledForm.name),
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.2,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text(
+                                                  "Registered by",
+                                                  style: GoogleFonts.roboto(
+                                                    textStyle: TextStyle(
+                                                        color: Colors.grey,
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.normal),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Text(filledForm.whichUser),
                                               ],
                                             ),
                                           ),
@@ -171,7 +196,7 @@ class _SignWorkerScreenState extends State<SignWorkerScreen> {
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
-                                                0.26,
+                                                0.19,
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
