@@ -640,31 +640,9 @@ class _WorkersScreenState extends State<WorkersScreen>
                                                                                   ),
                                                                                   items: [
                                                                                     DropdownMenuItem(
-                                                                                        value: "Deckcrew",
+                                                                                        value: "Worker",
                                                                                         child: Text(
-                                                                                          "Deckcrew",
-                                                                                          style: GoogleFonts.roboto(
-                                                                                            textStyle: TextStyle(
-                                                                                              color: Colors.black,
-                                                                                              fontSize: 12,
-                                                                                            ),
-                                                                                          ),
-                                                                                        )),
-                                                                                    DropdownMenuItem(
-                                                                                        value: "Machinecrew",
-                                                                                        child: Text(
-                                                                                          "Machinecrew",
-                                                                                          style: GoogleFonts.roboto(
-                                                                                            textStyle: TextStyle(
-                                                                                              color: Colors.black,
-                                                                                              fontSize: 12,
-                                                                                            ),
-                                                                                          ),
-                                                                                        )),
-                                                                                    DropdownMenuItem(
-                                                                                        value: "Supervisor",
-                                                                                        child: Text(
-                                                                                          "Supervisor",
+                                                                                          "Worker",
                                                                                           style: GoogleFonts.roboto(
                                                                                             textStyle: TextStyle(
                                                                                               color: Colors.black,
@@ -721,7 +699,7 @@ class _WorkersScreenState extends State<WorkersScreen>
                                                                         onPressed:
                                                                             () async {
                                                                           tools
-                                                                              .setUserRole(snapshot.data[index].username, "WORKER")
+                                                                              .setUserRole(snapshot.data[index].username, whichRoleEdit)
                                                                               .then((val) {
                                                                             if (val ==
                                                                                 true) {

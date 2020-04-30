@@ -131,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       print("Detected address: $address"),
                                       tools
                                           .login(uidController.value.text.trim(),
-                                              pwdController.value.text.trim())
+                                              pwdController.value.text.trim(), address)
                                           .then((isAuthed) => {
                                                 if (isAuthed)
                                                   {

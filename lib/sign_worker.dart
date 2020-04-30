@@ -139,13 +139,13 @@ class _SignWorkerScreenState extends State<SignWorkerScreen> {
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
-                                                0.35,
+                                                0.26,
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: <Widget>[
                                                 Text(
-                                                  "ID",
+                                                  "Name",
                                                   style: GoogleFonts.roboto(
                                                     textStyle: TextStyle(
                                                         color: Colors.grey,
@@ -157,7 +157,7 @@ class _SignWorkerScreenState extends State<SignWorkerScreen> {
                                                 SizedBox(
                                                   height: 5,
                                                 ),
-                                                Text(filledForm.id),
+                                                Text(filledForm.name),
                                               ],
                                             ),
                                           ),

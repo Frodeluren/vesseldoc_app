@@ -43,6 +43,187 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   var tools = new Tools();
 
+  List<Widget> listOfPortaitWidgets() {
+    List<Widget> listOfWidgets = new List<Widget>();
+    listOfWidgets.add(
+      Expanded(
+        child: GestureDetector(
+          onTap: () => Navigator.push(
+              context, MaterialPageRoute(builder: (_) => FormCreatorScreen())),
+          child:
+              menuItem("Create new form", "assets/workers3.png", 0XFFBF935A, 2),
+        ),
+      ),
+    );
+    listOfWidgets.add(
+      SizedBox(height: MediaQuery.of(context).size.width * 0.01),
+    );
+    listOfWidgets.add(
+      Expanded(
+        child: GestureDetector(
+          onTap: () => Navigator.push(
+              context, MaterialPageRoute(builder: (_) => FormListScreen())),
+          child: menuItem(
+              "Fill out form", "assets/filloutform3.png", 0XFFBF935A, 2),
+        ),
+      ),
+    );
+    listOfWidgets.add(
+      SizedBox(height: MediaQuery.of(context).size.width * 0.01),
+    );
+    listOfWidgets.add(
+      Expanded(
+        child: GestureDetector(
+          onTap: () => {
+            if (tools.currentUserLoggedIn.role == "Worker")
+              {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => SignWorkerScreen()))
+              }
+            else
+              {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => SignSupervisorScreen()))
+              }
+          },
+          child: menuItem("Sign", "assets/sign2.png", 0XFFBF935A, 2),
+        ),
+      ),
+    );
+    if (tools.currentUserLoggedIn.role != "Worker") {
+      listOfWidgets.add(
+        SizedBox(height: MediaQuery.of(context).size.width * 0.01),
+      );
+      listOfWidgets.add(
+        Expanded(
+          child: GestureDetector(
+              onTap: () => Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => WorkersScreen())),
+              child: menuItem(
+                  "Manage workers", "assets/workers2.png", 0XFFBF935A, 2)),
+        ),
+      );
+    }
+    return listOfWidgets;
+  }
+
+  List<Widget> listOfLandscapeWidgets() {
+    List<Widget> listOfWidgets = new List<Widget>();
+    if (tools.currentUserLoggedIn.role != "Worker") {
+      listOfWidgets.add(
+        Expanded(
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => FormCreatorScreen())),
+                  child: menuItem(
+                      "Create new form", "assets/workers3.png", 0XFFBF935A, 2),
+                ),
+              ),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.01),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => FormListScreen())),
+                  },
+                  child: menuItem("Fill out form", "assets/filloutform3.png",
+                      0XFFBF935A, 2),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+      listOfWidgets.add(
+        SizedBox(height: MediaQuery.of(context).size.width * 0.01),
+      );
+      listOfWidgets.add(
+        Expanded(
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => SignSupervisorScreen())),
+                        child:
+                            menuItem("Sign", "assets/sign2.png", 0XFFBF935A, 2),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.01),
+              Expanded(
+                child: GestureDetector(
+                    onTap: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => WorkersScreen())),
+                    child: menuItem("Manage workers", "assets/workers2.png",
+                        0XFFBF935A, 2)),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      listOfWidgets.add(
+        Expanded(
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => FormCreatorScreen())),
+                  child: menuItem(
+                      "Create new form", "assets/workers3.png", 0XFFBF935A, 2),
+                ),
+              ),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.01),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => SignSupervisorScreen())),
+                  child: menuItem("Sign", "assets/sign2.png", 0XFFBF935A, 2),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+      listOfWidgets.add(
+        SizedBox(height: MediaQuery.of(context).size.width * 0.01),
+      );
+      listOfWidgets.add(
+        Expanded(
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => FormListScreen())),
+                  },
+                  child: menuItem("Fill out form", "assets/filloutform3.png",
+                      0XFFBF935A, 2),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    return listOfWidgets;
+  }
+
   Widget dashBoard() {
     if (MediaQuery.of(context).orientation == Orientation.portrait) {
       return SafeArea(
@@ -54,65 +235,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               children: <Widget>[
                 Expanded(
                   child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => FormCreatorScreen())),
-                          child: menuItem("Create new form",
-                              "assets/workers3.png", 0XFFBF935A, 2),
-                        ),
-                      ),
-                      SizedBox(
-                          height: MediaQuery.of(context).size.width * 0.01),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => FormListScreen())),
-                          child: menuItem("Fill out form",
-                              "assets/filloutform3.png", 0XFFBF935A, 2),
-                        ),
-                      ),
-                      SizedBox(
-                          height: MediaQuery.of(context).size.width * 0.01),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => {
-                            if (tools.currentUserLoggedIn.role == "Worker")
-                              {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => SignWorkerScreen()))
-                              }
-                            else
-                              {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => SignSupervisorScreen()))
-                              }
-                          },
-                          child: menuItem(
-                              "Sign", "assets/sign2.png", 0XFFBF935A, 2),
-                        ),
-                      ),
-                      SizedBox(
-                          height: MediaQuery.of(context).size.width * 0.01),
-                      Expanded(
-                        child: GestureDetector(
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => WorkersScreen())),
-                            child: menuItem("Manage workers",
-                                "assets/workers2.png", 0XFFBF935A, 2)),
-                      ),
-                    ],
+                    children: listOfPortaitWidgets(),
                   ),
                 ),
               ],
@@ -129,59 +252,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Column(
               children: <Widget>[
                 Expanded(
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => FormCreatorScreen())),
-                          child: menuItem("Create new form",
-                              "assets/workers3.png", 0XFFBF935A, 2),
-                        ),
-                      ),
-                      SizedBox(width: MediaQuery.of(context).size.width * 0.01),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => FormListScreen())),
-                          },
-                          child: menuItem("Fill out form",
-                              "assets/filloutform3.png", 0XFFBF935A, 2),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: MediaQuery.of(context).size.width * 0.01),
-                Expanded(
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => SignSupervisorScreen())),
-                          child: menuItem(
-                              "Sign", "assets/sign2.png", 0XFFBF935A, 2),
-                        ),
-                      ),
-                      SizedBox(width: MediaQuery.of(context).size.width * 0.01),
-                      Expanded(
-                        child: GestureDetector(
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => WorkersScreen())),
-                            child: menuItem("Manage workers",
-                                "assets/workers2.png", 0XFFBF935A, 2)),
-                      ),
-                    ],
+                  child: Column(
+                    children: listOfLandscapeWidgets(),
                   ),
                 ),
               ],

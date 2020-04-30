@@ -15,7 +15,7 @@ import 'package:http_parser/http_parser.dart';
 
 class Tools {
   static final Tools _tools = Tools._internal();
-  static const String url = "http://vesseldoc.net:80";
+  static String url;
   User currentUserLoggedIn;
 
   List<Widget> itemsInDataTable = new List<Widget>();
@@ -27,9 +27,10 @@ class Tools {
 
   Tools._internal();
 
-  Future<bool> login(String username, String password) async {
+  Future<bool> login(String username, String password, String address) async {
     String path = "/authenticate";
     Map<String, String> headers = {"Content-type": "application/json"};
+    url = "http://"+address;
     print(url);
     print('username: "$username" \npassword: "$password"');
 
@@ -44,7 +45,7 @@ class Tools {
       ts.writeToken(response.body);
       var decData = json.decode(response.body);
       token = decData["token"];
-      getCurrentUser();
+      await getCurrentUser();
       return true;
     } else {
       return false;
