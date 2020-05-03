@@ -1,18 +1,14 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:vesseldoc_app/filled_form.dart';
-import 'package:vesseldoc_app/form.dart';
 import 'package:vesseldoc_app/form_structure.dart';
 import 'package:vesseldoc_app/token_service.dart';
 import 'package:vesseldoc_app/user.dart';
-import 'package:dio/dio.dart';
-import 'package:dio/adapter.dart';
-import 'package:http_parser/http_parser.dart';
 
+/// Singleton class acting as a service to multiple widgets. 
 class Tools {
   static final Tools _tools = Tools._internal();
   static String url;
@@ -31,14 +27,9 @@ class Tools {
     String path = "/authenticate";
     Map<String, String> headers = {"Content-type": "application/json"};
     url = "http://"+address;
-    print(url);
-    print('username: "$username" \npassword: "$password"');
-
     var response = await http.post(url + path,
         headers: headers,
         body: '{"username": "$username", "password": "$password"}');
-    print("Response code: ${response.statusCode}");
-    print("Response body: ${response.headers}");
     
     if (response.statusCode == 200) { 
       TokenService ts = new TokenService();
@@ -59,7 +50,7 @@ class Tools {
     var response = await http.post(url + path,
         headers: headers,
         body: '{"username": "$username", "password": "$password"}');
-    print(response.body);
+
     if (response.statusCode == 200) {
       if(role  != "WORKER"){
       var responseOnRoleSet = await http.post(
@@ -67,7 +58,6 @@ class Tools {
         headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
       );
       if (responseOnRoleSet.statusCode == 200) {
-        print(responseOnRoleSet.body);
         return true;
       }
       }
@@ -102,6 +92,18 @@ class Tools {
     }
   }
 
+  Future<bool> deactivateUser(String username) async {
+    var response = await http.post(
+      url + "/user/set/deactivate?username=$username",
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<List<User>> getListOfUsers() async {
     List<User> listOfUsers = new List<User>();
     String path = "/user/get/list";
@@ -109,8 +111,6 @@ class Tools {
       url + path,
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
-    print("Response code: ${response.statusCode}");
-    print("Response body: ${response.body}");
 
     if (response.statusCode == 200) {
       final jsondata = json.decode(response.body);
@@ -163,8 +163,8 @@ class Tools {
 
       for (var structure in jsondata) {
         FilledForm filledForm = new FilledForm();
-        Map test = structure[2];
-        dynamic temp = test.values.toList();
+        Map filledFormMap = structure[2];
+        dynamic temp = filledFormMap.values.toList();
         filledForm.whichUser = structure[1];
         filledForm.signedBy = temp[5].toString();
         filledForm.name = structure[0];
@@ -177,7 +177,7 @@ class Tools {
       }
       return listOfFilledForms;
     }
-    return null;
+    return [];
   }
 
   Future<List<FilledForm>> getListOfAllUnsignedFilledOutForms() async {
@@ -192,8 +192,8 @@ class Tools {
 
       for (var structure in jsondata) {
         FilledForm filledForm = new FilledForm();
-        Map test = structure[2];
-        dynamic temp = test.values.toList();
+        Map filledFormMap = structure[2];
+        dynamic temp = filledFormMap.values.toList();
         filledForm.signedBy = temp[5].toString();
         filledForm.name = structure[0];
         filledForm.id = temp[0];
@@ -205,7 +205,7 @@ class Tools {
       }
       return listOfFilledForms;
     }
-    return null;
+    return [];
   }
 
   Future<Map> getWantedFilledForm(FilledForm filledForm) async {
@@ -215,7 +215,6 @@ class Tools {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
     if (response.statusCode == 200) {
-      print(response.body);
       Map<String, dynamic> map = json.decode(response.body);
       return map;
     } else
@@ -229,8 +228,6 @@ class Tools {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
     if (response.statusCode == 200) {
-      print(response.body);
-
       Map<String, dynamic> map = json.decode(response.body);
       return map;
     } else
@@ -264,7 +261,6 @@ class Tools {
     Directory tempDir = await getTemporaryDirectory();
     String tempPath = tempDir.path;
     String fileName = tempPath + "/$title.json";
-    //var jsonData = json.encode(data);
     new File(fileName).writeAsStringSync("$data");
     var request = http.MultipartRequest('POST', Uri.parse(url + path));
     request.headers["authorization"] = "Bearer " + token;
@@ -278,7 +274,6 @@ class Tools {
     if (res.statusCode == 200) {
       return true;
     }
-    // print(res);
     return false;
   }
 
@@ -312,7 +307,6 @@ class Tools {
       if (res.statusCode == 200) {
         return true;
       }
-      // print(res);
       return false;
     }
     return false;
@@ -320,7 +314,6 @@ class Tools {
 
   void moveItemInList(int oldIndex, int newIndex) {
     final item = itemsInDataTable.removeAt(oldIndex);
-
     itemsInDataTable.insert(newIndex, item);
   }
 

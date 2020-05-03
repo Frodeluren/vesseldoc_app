@@ -5,6 +5,7 @@ import 'package:vesseldoc_app/form_creator.dart';
 import 'package:vesseldoc_app/form_list_screen.dart';
 import 'package:vesseldoc_app/sign_supervisor.dart';
 import 'package:vesseldoc_app/sign_worker.dart';
+import 'package:vesseldoc_app/splash_screen.dart';
 import 'package:vesseldoc_app/tools.dart';
 import 'package:vesseldoc_app/workers_screen.dart';
 
@@ -313,13 +314,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
         title: Text("Dashboard"),
         centerTitle: true,
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.settings, color: Colors.white),
-            onPressed: () {},
+          PopupMenuButton<String>(
+            onSelected: (String result) {
+              setState(() {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => SplashScreen()),
+                  (Route<dynamic> route) => false,
+                );
+              });
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: "Sign out",
+                child: Text('Sign out'),
+              ),
+            ],
           ),
         ],
       ),
       body: dashBoard(),
     );
+  }
+
+  void choiceAction() {
+    print("");
   }
 }

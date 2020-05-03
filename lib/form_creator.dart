@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -106,7 +105,6 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
   var random = new Random(randomSeed.nextInt(10000));
 
   void addItemToDatatable() {
-    //var currentWidget;
     setState(() {
       if (fieldType != "" &&
           fieldTextController.text != "" &&
@@ -121,7 +119,6 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
         String key = random.nextInt(10000).toString();
         String keySuper = random.nextInt(10000).toString();
         Widget w = new DatatableItemWidget(
-            //currentWidget: currentWidget,
             fieldType: fieldType,
             keyWidget: key,
             fieldText: fieldTextController.text,
@@ -129,7 +126,6 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
             isRequired: false,
             keySuper: keySuper);
         tools.itemsInDataTable.add(w);
-        //currentWidget = w;
       }
     });
   }
@@ -1149,7 +1145,6 @@ class _FormCreatorScreenState extends State<FormCreatorScreen> {
         child: Center(
           child: Container(
             width: MediaQuery.of(context).size.width * 0.97,
-            //height: MediaQuery.of(context).size.height,
             child: Column(
               children: getListOfWidgets(),
             ),

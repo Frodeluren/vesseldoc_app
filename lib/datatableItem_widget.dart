@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vesseldoc_app/form_creator.dart';
 import 'package:vesseldoc_app/tools.dart';
 
 class DatatableItemWidget extends StatefulWidget {
@@ -21,7 +20,6 @@ class _DatatableItemWidgetState extends State<DatatableItemWidget>  {
   
  @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 

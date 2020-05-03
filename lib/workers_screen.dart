@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vesseldoc_app/tools.dart';
 import 'package:vesseldoc_app/user.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 class WorkersScreen extends StatefulWidget {
   @override
@@ -11,12 +10,9 @@ class WorkersScreen extends StatefulWidget {
 
 class _WorkersScreenState extends State<WorkersScreen>
     with SingleTickerProviderStateMixin {
-  TabController _controller;
-  TabBar tabBar;
   TextEditingController _usernameController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
   TextEditingController _usernameEditController = new TextEditingController();
-  TextEditingController _passwordEditController = new TextEditingController();
   String whichRoleEdit;
   String whichRole;
 
@@ -26,26 +22,16 @@ class _WorkersScreenState extends State<WorkersScreen>
   @override
   void initState() {
     super.initState();
-    _controller = new TabController(
-      length: 2,
-      vsync: this,
-    );
     _futureGetListOfUsers = tools.getListOfUsers();
   }
 
+  //overridden setState because of the handling of two explicit states in this class ('Alertdialog' and 'WorkersScreenState').
   @override
   void setState(fn) {
     if (mounted) {
       super.setState(fn);
     }
   }
-
-  List<Tab> myTabs = <Tab>[
-    new Tab(text: "Active users"),
-    new Tab(
-      text: "Roles",
-    )
-  ];
 
   var tools = new Tools();
   Future<List<User>> _futureGetListOfUsers;
@@ -156,14 +142,7 @@ class _WorkersScreenState extends State<WorkersScreen>
               ),
             ),
             Container(
-              //width: MediaQuery.of(context).size.width * 0.65,
               decoration: new BoxDecoration(
-                // boxShadow: [
-                //   BoxShadow(
-                //     color: Colors.black,
-                //     blurRadius: 10.0,
-                //   ),
-                // ],
                 borderRadius: new BorderRadius.all(
                   new Radius.circular(10.0),
                 ),
@@ -175,28 +154,6 @@ class _WorkersScreenState extends State<WorkersScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    // Row(
-                    //   children: <Widget>[
-                    //     new Container(
-                    //       margin: EdgeInsets.only(bottom: 20),
-                    //       width: MediaQuery.of(context).size.width * 0.25,
-                    //       decoration: new BoxDecoration(
-                    //           borderRadius: new BorderRadius.all(
-                    //               new Radius.circular(10.0)),
-                    //           color: Colors.transparent),
-                    //       child: new TabBar(
-                    //           labelStyle: TextStyle(
-                    //               color: Colors.grey,
-                    //               fontSize: 14,
-                    //               fontWeight: FontWeight.normal),
-                    //           labelColor: Colors.black,
-                    //           indicatorColor: Color.fromARGB(255, 190, 147, 90),
-                    //           controller: _controller,
-                    //           tabs: myTabs),
-                    //     ),
-                    //     SizedBox(width: 50),
-                    //   ],
-                    // ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -407,11 +364,13 @@ class _WorkersScreenState extends State<WorkersScreen>
                                                               .toUpperCase())
                                                       .then((val) {
                                                     if (val == true) {
-                                                      setState(() {
-                                                        _futureGetListOfUsers =
-                                                            tools
-                                                                .getListOfUsers();
-                                                      });
+                                                      if (mounted) {
+                                                        this.setState(() {
+                                                          _futureGetListOfUsers =
+                                                              tools
+                                                                  .getListOfUsers();
+                                                        });
+                                                      }
                                                       var snack = new SnackBar(
                                                         content: new Row(
                                                           children: <Widget>[
@@ -507,7 +466,7 @@ class _WorkersScreenState extends State<WorkersScreen>
                                                   width: MediaQuery.of(context)
                                                           .size
                                                           .width *
-                                                      0.25,
+                                                      0.30,
                                                   child: Row(
                                                     children: <Widget>[
                                                       Column(
@@ -537,7 +496,11 @@ class _WorkersScreenState extends State<WorkersScreen>
                                                         ],
                                                       ),
                                                       SizedBox(
-                                                        width: 100,
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.15,
                                                       ),
                                                       Column(
                                                         crossAxisAlignment:
@@ -570,7 +533,55 @@ class _WorkersScreenState extends State<WorkersScreen>
                                                 ),
                                                 Row(children: <Widget>[
                                                   GestureDetector(
-                                                      onTap: () => {},
+                                                      onTap: () => {
+                                                            tools
+                                                                .deactivateUser(
+                                                                    snapshot
+                                                                        .data[
+                                                                            index]
+                                                                        .username)
+                                                                .then((val) {
+                                                              if (val == true) {
+                                                                setState(() {
+                                                                  _futureGetListOfUsers =
+                                                                      tools
+                                                                          .getListOfUsers();
+                                                                });
+
+                                                                var snack =
+                                                                    new SnackBar(
+                                                                  content:
+                                                                      new Row(
+                                                                    children: <
+                                                                        Widget>[
+                                                                      new Text(
+                                                                          "Success, user was deactivated!"),
+                                                                    ],
+                                                                  ),
+                                                                );
+                                                                _scaffoldKeyCreateNewUser
+                                                                    .currentState
+                                                                    .showSnackBar(
+                                                                        snack);
+                                                              } else {
+                                                                var snack =
+                                                                    new SnackBar(
+                                                                  content:
+                                                                      new Row(
+                                                                    children: <
+                                                                        Widget>[
+                                                                      new Text(
+                                                                          "Something went wrong with user deactivation..."),
+                                                                    ],
+                                                                  ),
+                                                                );
+                                                                _scaffoldKeyCreateNewUser
+                                                                    .currentState
+                                                                    .showSnackBar(
+                                                                        snack);
+                                                              }
+                                                            })
+                                                          },
                                                       child:
                                                           Icon(Icons.delete)),
                                                   SizedBox(

@@ -1,11 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:vesseldoc_app/tools.dart';
 import './store_address_service.dart';
-import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
-import './token_service.dart';
 
 StoreAddressService sas = new StoreAddressService();
 String address;
@@ -130,8 +125,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                     {
                                       print("Detected address: $address"),
                                       tools
-                                          .login(uidController.value.text.trim(),
-                                              pwdController.value.text.trim(), address)
+                                          .login(
+                                              uidController.value.text.trim(),
+                                              pwdController.value.text.trim(),
+                                              address)
                                           .then((isAuthed) => {
                                                 if (isAuthed)
                                                   {
@@ -145,6 +142,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   {
                                                     _scaffoldKey.currentState
                                                         .hideCurrentSnackBar(),
+                                                    Future.delayed(
+                                                        Duration(seconds: 1),
+                                                        () {
+                                                      _scaffoldKey.currentState
+                                                          .showSnackBar(
+                                                              new SnackBar(
+                                                        content: new Row(
+                                                          children: <Widget>[
+                                                            Icon(
+                                                              Icons.clear,
+                                                            ),
+                                                            new Text(
+                                                                "   Wrong user credentials!"),
+                                                          ],
+                                                        ),
+                                                      ));
+                                                    }),
                                                   }
                                               })
                                     }

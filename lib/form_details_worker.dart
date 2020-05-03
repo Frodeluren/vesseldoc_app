@@ -255,19 +255,6 @@ class _FormWorkerDetailsScreenState extends State<FormDetailsWorkerScreen> {
                                 actionSave: (dynamic data) async {},
                               ),
                             ),
-                            // GestureDetector(
-                            //   onTap: () => {tools.signForm(widget.filledForm)},
-                            //   child: new Container(
-                            //     height: 40.0,
-                            //     color: Color.fromARGB(255, 190, 147, 90),
-                            //     child: Center(
-                            //       child: Text("Sign",
-                            //           style: TextStyle(
-                            //               color: Colors.white,
-                            //               fontWeight: FontWeight.bold)),
-                            //     ),
-                            //   ),
-                            // ),
                           ],
                         ),
                       );
