@@ -14,6 +14,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final uidController = TextEditingController();
   final pwdController = TextEditingController();
+  bool validateUid = false;
+  bool validatePwd = false;
   var tools = Tools();
 
   @override
@@ -73,6 +75,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: "Username",
+                                  errorText: validateUid
+                                      ? 'Username Can\'t Be Empty'
+                                      : null,
                                   hintStyle: TextStyle(
                                       color: Colors.grey.shade600,
                                       fontSize: 30.0,
@@ -97,6 +102,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: "Password",
+                                  errorText: validatePwd
+                                      ? 'Password Can\'t Be Empty'
+                                      : null,
                                   hintStyle: TextStyle(
                                       color: Colors.grey.shade600,
                                       fontSize: 30.0,
@@ -110,67 +118,79 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       RaisedButton(
                           onPressed: () {
-                            _scaffoldKey.currentState.showSnackBar(new SnackBar(
-                              content: new Row(
-                                children: <Widget>[
-                                  new CircularProgressIndicator(),
-                                  new Text("   Signing-In..."),
-                                ],
-                              ),
-                            ));
-                            sas.readAddress().then((addressRead) => {
-                                  print("Address: '$addressRead'"),
-                                  address = addressRead,
-                                  if (address.isNotEmpty)
-                                    {
-                                      print("Detected address: $address"),
-                                      tools
-                                          .login(
-                                              uidController.value.text.trim(),
-                                              pwdController.value.text.trim(),
-                                              address)
-                                          .then((isAuthed) => {
-                                                if (isAuthed)
-                                                  {
-                                                    _scaffoldKey.currentState
-                                                        .hideCurrentSnackBar(),
-                                                    Navigator.of(context)
-                                                        .pushReplacementNamed(
-                                                            "/DashboardScreen"),
-                                                  }
-                                                else
-                                                  {
-                                                    _scaffoldKey.currentState
-                                                        .hideCurrentSnackBar(),
-                                                    Future.delayed(
-                                                        Duration(seconds: 1),
-                                                        () {
+                            setState(() {
+                              uidController.text.isEmpty
+                                  ? validateUid = true
+                                  : validateUid = false;
+                              pwdController.text.isEmpty
+                                  ? validatePwd = true
+                                  : validatePwd = false;
+                            });
+                            if (validateUid == false && validatePwd == false) {
+                              _scaffoldKey.currentState
+                                  .showSnackBar(new SnackBar(
+                                content: new Row(
+                                  children: <Widget>[
+                                    new CircularProgressIndicator(),
+                                    new Text("   Signing-In..."),
+                                  ],
+                                ),
+                              ));
+                              sas.readAddress().then((addressRead) => {
+                                    print("Address: '$addressRead'"),
+                                    address = addressRead,
+                                    if (address.isNotEmpty)
+                                      {
+                                        print("Detected address: $address"),
+                                        tools
+                                            .login(
+                                                uidController.value.text.trim(),
+                                                pwdController.value.text.trim(),
+                                                address)
+                                            .then((isAuthed) => {
+                                                  if (isAuthed)
+                                                    {
                                                       _scaffoldKey.currentState
-                                                          .showSnackBar(
-                                                              new SnackBar(
-                                                        content: new Row(
-                                                          children: <Widget>[
-                                                            Icon(
-                                                              Icons.clear,
-                                                            ),
-                                                            new Text(
-                                                                "   Wrong user credentials!"),
-                                                          ],
-                                                        ),
-                                                      ));
-                                                    }),
-                                                  }
-                                              })
-                                    }
-                                  else
-                                    {
-                                      print(
-                                          "WARNING: No address detected! Continues to dashboard and assumes this is a test."),
-                                      Navigator.of(context)
-                                          .pushReplacementNamed(
-                                              "/DashboardScreen"),
-                                    }
-                                });
+                                                          .hideCurrentSnackBar(),
+                                                      Navigator.of(context)
+                                                          .pushReplacementNamed(
+                                                              "/DashboardScreen"),
+                                                    }
+                                                  else
+                                                    {
+                                                      _scaffoldKey.currentState
+                                                          .hideCurrentSnackBar(),
+                                                      Future.delayed(
+                                                          Duration(seconds: 1),
+                                                          () {
+                                                        _scaffoldKey
+                                                            .currentState
+                                                            .showSnackBar(
+                                                                new SnackBar(
+                                                          content: new Row(
+                                                            children: <Widget>[
+                                                              Icon(
+                                                                Icons.clear,
+                                                              ),
+                                                              new Text(
+                                                                  "   Wrong user credentials!"),
+                                                            ],
+                                                          ),
+                                                        ));
+                                                      }),
+                                                    }
+                                                })
+                                      }
+                                    else
+                                      {
+                                        print(
+                                            "WARNING: No address detected! Continues to dashboard and assumes this is a test."),
+                                        Navigator.of(context)
+                                            .pushReplacementNamed(
+                                                "/DashboardScreen"),
+                                      }
+                                  });
+                            }
                           },
                           shape: RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(20.0)),
