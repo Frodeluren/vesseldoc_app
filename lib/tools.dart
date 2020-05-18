@@ -8,7 +8,7 @@ import 'package:vesseldoc_app/form_structure.dart';
 import 'package:vesseldoc_app/token_service.dart';
 import 'package:vesseldoc_app/user.dart';
 
-/// Singleton class acting as a service to multiple widgets. 
+/// Singleton class acting as a service to multiple widgets.
 class Tools {
   static final Tools _tools = Tools._internal();
   static String url;
@@ -26,12 +26,12 @@ class Tools {
   Future<bool> login(String username, String password, String address) async {
     String path = "/authenticate";
     Map<String, String> headers = {"Content-type": "application/json"};
-    url = "http://"+address;
+    url = "http://" + address;
     var response = await http.post(url + path,
         headers: headers,
         body: '{"username": "$username", "password": "$password"}');
-    
-    if (response.statusCode == 200) { 
+
+    if (response.statusCode == 200) {
       TokenService ts = new TokenService();
       ts.writeToken(response.body);
       var decData = json.decode(response.body);
@@ -52,14 +52,14 @@ class Tools {
         body: '{"username": "$username", "password": "$password"}');
 
     if (response.statusCode == 200) {
-      if(role  != "WORKER"){
-      var responseOnRoleSet = await http.post(
-        url + "/user/set/role?username=$username&role=$role",
-        headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
-      );
-      if (responseOnRoleSet.statusCode == 200) {
-        return true;
-      }
+      if (role != "WORKER") {
+        var responseOnRoleSet = await http.post(
+          url + "/user/set/role?username=$username&role=$role",
+          headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+        );
+        if (responseOnRoleSet.statusCode == 200) {
+          return true;
+        }
       }
       return true;
     } else {
@@ -160,13 +160,14 @@ class Tools {
     );
     if (response.statusCode == 200) {
       final jsondata = json.decode(response.body);
+      print(response.body);
 
       for (var structure in jsondata) {
         FilledForm filledForm = new FilledForm();
-        Map filledFormMap = structure[2];
+        Map filledFormMap = structure[3];
         dynamic temp = filledFormMap.values.toList();
         filledForm.whichUser = structure[1];
-        filledForm.signedBy = temp[5].toString();
+        filledForm.signedBy = structure[2];
         filledForm.name = structure[0];
         filledForm.id = temp[0];
         filledForm.isSigned = temp[4];
@@ -177,6 +178,7 @@ class Tools {
       }
       return listOfFilledForms;
     }
+    print(response.body);
     return [];
   }
 
@@ -227,6 +229,7 @@ class Tools {
       url + path,
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
+    print(response.body);
     if (response.statusCode == 200) {
       Map<String, dynamic> map = json.decode(response.body);
       return map;

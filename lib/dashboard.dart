@@ -192,7 +192,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => SignSupervisorScreen())),
+                          builder: (_) => SignWorkerScreen())),
                   child: menuItem("Sign", "assets/sign2.png", 0XFFBF935A, 2),
                 ),
               ),
@@ -322,6 +322,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   MaterialPageRoute(builder: (context) => SplashScreen()),
                   (Route<dynamic> route) => false,
                 );
+                tools.currentUserLoggedIn = null;
               });
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
